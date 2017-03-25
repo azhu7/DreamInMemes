@@ -22,6 +22,9 @@
         <activity android:name=".Tabs" >
 
         </activity>
+        <activity android:name=".Lobby" >
+            
+        </activity>
     </application>
 
 </manifest>
