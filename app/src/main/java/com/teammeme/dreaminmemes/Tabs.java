@@ -269,6 +269,11 @@ public class Tabs extends AppCompatActivity {
         }
     }
 
+    public void logOut(View v){
+        ParseUser user = ParseUser.getCurrentUser();
+        user.logOut();
+    }
+
     // Attached to new lobby button
     public void createNewLobby(View view) {
         ParseUser user = ParseUser.getCurrentUser();
