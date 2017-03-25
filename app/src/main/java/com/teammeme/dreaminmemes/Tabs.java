@@ -1,4 +1,4 @@
-package com.example.dillo.memesagainsthumanity;
+package com.teammeme.dreaminmemes;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
