@@ -171,7 +171,7 @@ public class Lobby extends AppCompatActivity {
     }
 
     // Delete specified lobby from Parse Cloud. Also delete any mentions of the lobby's objectId.
-    public void closeLobby() {
+    public void closeLobby(View v) {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Lobby");
         query.getInBackground(lobbyId, new GetCallback<ParseObject>() {
             @Override
