@@ -1,12 +1,18 @@
 package com.teammeme.dreaminmemes;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -168,7 +174,7 @@ public class Lobby extends AppCompatActivity {
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String username = input.getText().toString();
-                
+
 
             }
         });
@@ -181,6 +187,32 @@ public class Lobby extends AppCompatActivity {
         });
 
         alert.show();
+    }
+
+    private void createFriendInviteListItem(LinearLayout LL, String username) {
+
+        float scale = getResources().getDisplayMetrics().density;
+        int dpAsPixels5 = (int) (5*scale + 0.5f);
+
+        LinearLayout l = new LinearLayout(getApplicationContext());
+        l.setGravity(Gravity.CENTER);
+        l.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        ImageView iv = new ImageView(getApplicationContext());
+        LinearLayout.LayoutParams ivParams = new LinearLayout.LayoutParams(25, 25);
+        iv.setBackgroundColor(Color.parseColor("#000000"));
+
+        TextView tv = new TextView(getApplicationContext());
+        LinearLayout.LayoutParams tvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        tv.setText(username);
+        tvParams.setMargins(0, dpAsPixels5, 0, 0);
+
+        l.addView(iv, ivParams);
+        l.addView(tv, tvParams);
+        LL.addView(l, layoutParams);
     }
 
 
