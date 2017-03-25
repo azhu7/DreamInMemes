@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
         installation.put("TempSenderID", "1234567890");
         installation.saveInBackground();
-        ParseUser.getCurrentUser().logOut();
+
         // Check if user info is cached on disk. If so, go directly to Tabs
         if (ParseUser.getCurrentUser() != null) {
             Intent i = new Intent(getApplicationContext(), Tabs.class);
