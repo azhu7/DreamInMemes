@@ -8,6 +8,7 @@
     <string name="game_init_privacy_header">THIS GAME IS</string>
     <string-array name="game_init_privacy">
         <item>Invite only</item>
+        <item>Public</item>
     </string-array>
     <string name="game_init_invite_header">INVITE FRIENDS TO YOUR GAME</string>
     <string name="game_init_invite_prompt">+invite friend</string>
