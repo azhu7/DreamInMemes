@@ -79,11 +79,20 @@ public class MainActivity extends AppCompatActivity {
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
         installation.put("TempSenderID", "1234567890");
         installation.saveInBackground();
+
+        // Check if user info is cached on disk. If so, go directly to Tabs
+        if (ParseUser.getCurrentUser() != null) {
+            Intent i = new Intent(getApplicationContext(), Tabs.class);
+            startActivity(i);
+        }
     }
 
     void parseLogin(){
         ParseUser currentUser = ParseUser.getCurrentUser();
-        currentUser.logOut();
+        // If a user is currently logged in, log out.
+        if (currentUser != null) {
+            currentUser.logOut();
+        }
         ParseUser.logInInBackground(et_username.getText().toString(), et_password.getText().toString(), new LogInCallback() {
             @Override
             public void done(ParseUser parseUser, ParseException e) {
@@ -103,6 +112,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void parseRegister() {
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        // If a user is currently logged in, log out.
+        if (currentUser != null) {
+            currentUser.logOut();
+        }
         ParseUser user = new ParseUser();
         user.setUsername(et_username.getText().toString());
         user.setPassword(et_password.getText().toString());

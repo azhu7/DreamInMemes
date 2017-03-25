@@ -101,33 +101,29 @@ public class Lobby extends AppCompatActivity {
         }
     }
 
-    // Store lobby to DB
-    private void storeLobby() {
-        // Write to DB: TODO: Query object and alter contents? How?
-        /*final ParseObject dataObject = ParseObject.create("Lobby");
-        dataObject.put("name", name);
-        dataObject.put("players", players);
-        dataObject.put("judgeQueue", judgeQueue);
-        dataObject.put("roundNum", roundNum);
-        dataObject.put("state", state.ordinal());
-
-        dataObject.saveInBackground(new SaveCallback() {
-            public void done(ParseException e) {
+    // Store lobby to DB. Requires that specified lobby exists in DB already.
+    private void saveLobby(final String lobbyId) {
+        // Write to DB: query object by objectId and alter contents
+        ParseQuery<ParseObject> dataObject = ParseQuery.getQuery("Lobby");
+        dataObject.getInBackground(lobbyId, new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
                 if (e == null) {
-                    // Successful save to DB
-                    Intent i = new Intent(getApplicationContext(), Lobby.class);
-                    i.putExtra("lobbyId", dataObject.getObjectId());
-                    startActivity(i);
+                    object.put("name", name);
+                    object.put("players", players);
+                    object.put("judgeQueue", judgeQueue);
+                    object.put("roundNum", roundNum);
+                    object.put("state", state.ordinal());
+                    object.saveInBackground();
                 } else {
-                    // Failure
-                    Log.d("*****TabGlobal", "Error saving lobby: " + e.getMessage());
+                    Log.d("*****Lobby", "Error saving lobby: " + e.getMessage());
                 }
             }
-        });*/
+        });
     }
 
     // Load specified lobby from DB
-    void loadLobby(String lobbyId) {
+    void loadLobby(final String lobbyId) {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Lobby");
         query.getInBackground(lobbyId, new GetCallback<ParseObject>() {
             @Override
@@ -141,6 +137,9 @@ public class Lobby extends AppCompatActivity {
                     roundNum = object.getInt("roundNum");
                     state = State.values()[object.getInt("state")];
                     loadLayout();
+                    name = "Changed!";
+                    judgeQueue.add("Another user!");
+                    saveLobby(lobbyId);
                 } else {
                     Log.d("*****Lobby", "Error: " + e.getMessage());
                 }
