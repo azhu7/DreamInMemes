@@ -24,4 +24,6 @@ public class Tabs extends AppCompatActivity {
     public void open_tab_user(View v) {
         setContentView(R.layout.tab_user);
     }
+
+
 }
