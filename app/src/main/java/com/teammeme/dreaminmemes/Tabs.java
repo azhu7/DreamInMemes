@@ -2,13 +2,10 @@ package com.teammeme.dreaminmemes;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,7 +17,6 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -201,13 +197,12 @@ public class Tabs extends AppCompatActivity {
 
         }
 
-
-        // Store blank lobby (containing owner only) to DB
-        void startBlankLobby(String ownerId) {
+        // Store blank lobby (containing owner only) to DB and switch activity
+        void openNewLobby(String lobbyId) {
             ArrayList<String> players = new ArrayList<>();
             LinkedList<String> judgeQueue = new LinkedList<>();
-            players.add(ownerId);
-            judgeQueue.add(ownerId);
+            players.add(lobbyId);
+            judgeQueue.add(lobbyId);
 
             // Write to DB
             final ParseObject dataObject = ParseObject.create("Lobby");
@@ -231,6 +226,13 @@ public class Tabs extends AppCompatActivity {
                 }
             });
         }
+
+        // Switch activity and load specified lobby
+        void openExistingLobby(String lobbyId) {
+            Intent i = new Intent(getApplicationContext(), Lobby.class);
+            i.putExtra("lobbyId", lobbyId);
+            startActivity(i);
+        }
     }
 
     private class TabNotifications {
@@ -245,8 +247,9 @@ public class Tabs extends AppCompatActivity {
         }
     }
 
+    // Attached to new lobby button
     public void createNewLobby(View view) {
         ParseUser user = ParseUser.getCurrentUser();
-        tabGlobal.startBlankLobby(user.getObjectId());
+        tabGlobal.openNewLobby(user.getObjectId());
     }
 }
