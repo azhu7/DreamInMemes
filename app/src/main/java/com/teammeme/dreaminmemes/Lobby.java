@@ -1,8 +1,12 @@
 package com.teammeme.dreaminmemes;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -150,4 +154,34 @@ public class Lobby extends AppCompatActivity {
             }
         });
     }
+
+    public void inviteUser(View v) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert.setTitle("Title");
+        alert.setMessage("Message");
+
+        // Set an EditText view to get user input
+        final EditText input = new EditText(this);
+        alert.setView(input);
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String username = input.getText().toString();
+                
+
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+
+            }
+        });
+
+        alert.show();
+    }
+
+
 }
