@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">DreamInMemes</string>
+    <string name="return_home">Home</string>
+    <string name="end_game">End Game</string>
 
     <string name="game_init_title_header">GIVE YOUR GAME A TITLE</string>
     <string name="game_init_title_prompt">Enter title:</string>

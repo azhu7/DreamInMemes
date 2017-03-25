@@ -21,9 +21,9 @@ import com.parse.SignUpCallback;
 // MainActivity connects to Parse Server and initializes Login screen. Provides functionality
 // for logging in and registering user.
 public class MainActivity extends AppCompatActivity {
-    EditText et_username, et_password;
-    Button login, register;
-    TextView username, email;
+    private EditText et_username, et_password;
+    private Button login, register;
+    private TextView username, email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
