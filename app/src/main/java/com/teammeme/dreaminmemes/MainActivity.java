@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         ParseUser user = new ParseUser();
         user.setUsername(et_username.getText().toString());
         user.setPassword(et_password.getText().toString());
-        user.add("lobbies", new ArrayList<String>());
+        //user.add("lobbies", new ArrayList<String>());
 
         user.signUpInBackground(new SignUpCallback() {
             @Override

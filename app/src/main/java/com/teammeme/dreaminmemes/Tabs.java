@@ -230,13 +230,17 @@ public class Tabs extends AppCompatActivity {
                 public void done(ParseException e) {
                     if (e == null) {
                         // Successful save to DB
-                        Intent i = new Intent(getApplicationContext(), Lobby.class);
-                        i.putExtra("lobbyId", dataObject.getObjectId());
-                        startActivity(i);
+                        // Add lobby to user's lobbies
                         ParseUser user = ParseUser.getCurrentUser();
-                        List<String> temp = user.getList("lobbies");
-                        temp.add(dataObject.getObjectId());
-                        user.add("lobbies", temp);
+                        user.add("lobbies", dataObject.getObjectId());
+                        user.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                Intent i = new Intent(getApplicationContext(), Lobby.class);
+                                i.putExtra("lobbyId", dataObject.getObjectId());
+                                startActivity(i);
+                            }
+                        });
                     } else {
                         // Failure
                         Log.d("*****TabGlobal", "Error saving lobby: " + e.getMessage());
