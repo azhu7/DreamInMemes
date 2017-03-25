@@ -167,6 +167,12 @@ public class Tabs extends AppCompatActivity {
             final LinearLayout pendingLL = (LinearLayout) findViewById(R.id.LinLayoutPendingGames);
             final LinearLayout activeLL = (LinearLayout) findViewById(R.id.LinLayoutActiveGames);
 
+            pendingLL.removeAllViews();
+            activeLL.removeAllViews();
+
+            if (lobbies == null)
+                return;
+
             // Query for all of user's lobbies
             for (String lobbyId : lobbies) {
                 ParseQuery<ParseObject> query = ParseQuery.getQuery("Lobby");
@@ -237,6 +243,7 @@ public class Tabs extends AppCompatActivity {
                                 Intent i = new Intent(getApplicationContext(), Lobby.class);
                                 i.putExtra("lobbyId", dataObject.getObjectId());
                                 startActivity(i);
+                                populateGames();
                             }
                         });
                     } else {
@@ -252,6 +259,7 @@ public class Tabs extends AppCompatActivity {
             Intent i = new Intent(getApplicationContext(), Lobby.class);
             i.putExtra("lobbyId", lobbyId);
             startActivity(i);
+            populateGames();
         }
     }
 
