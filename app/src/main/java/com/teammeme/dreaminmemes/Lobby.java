@@ -181,7 +181,7 @@ public class Lobby extends AppCompatActivity {
                     for (ParseObject userInfo : playerInfos) {
                         userInfo.deleteInBackground();
                     }
-                    List<String> players = object.getList("judgeList");
+                    List<String> players = object.getList("judgeQueue");
                     if (players == null) {
                         object.deleteInBackground();
                         finish();
@@ -198,6 +198,8 @@ public class Lobby extends AppCompatActivity {
                                     // The query was successful.
                                     List<String> lobbies = objects.get(0).getList("lobbies");
                                     lobbies.remove(object.getObjectId());  // Remove this lobby
+                                    object.put("lobbies", lobbies);
+                                    object.saveInBackground();
                                 } else {
                                     Log.d("*****Lobby", "closeLobby failed to find user with objectId: " + userId);
                                 }
