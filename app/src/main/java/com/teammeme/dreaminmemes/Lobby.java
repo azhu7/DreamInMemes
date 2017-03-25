@@ -211,9 +211,9 @@ public class Lobby extends AppCompatActivity {
         int dpAsPixels5 = (int) (5*scale + 0.5f);
 
         LinearLayout l = new LinearLayout(getApplicationContext());
-        l.setGravity(Gravity.CENTER);
+        l.setGravity(Gravity.CENTER_HORIZONTAL);
         l.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
 
         ImageView iv = new ImageView(getApplicationContext());
