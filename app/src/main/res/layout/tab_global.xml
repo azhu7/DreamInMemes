@@ -36,11 +36,10 @@
             app:srcCompat="@mipmap/ic_launcher" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:onClick="logOut"
-            android:text="Log Out"/>
-
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:onClick="goToNotifications"
+        android:text="Log Out"/>
 
     </RelativeLayout>
 
@@ -125,16 +124,46 @@
 
     </LinearLayout>
 
-
-    <fragment
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight=".15"
-        android:id="@+id/frag1"
-        android:name="com.teammeme.dreaminmemes.FragmentTabs"
-        tools:layout="@layout/fragment_tabs_layout"></fragment>
+        android:weightSum="3"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <ImageButton
+            android:id="@+id/tabGlobal"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/TabBackgroundColor"
+            android:onClick="goToGlobal"
+            app:srcCompat="@mipmap/ic_launcher" />
 
+        <ImageButton
+            android:id="@+id/tabNotifications"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/TabBackgroundColor"
+            android:onClick="goToNotifications"
+            app:srcCompat="@mipmap/ic_launcher" />
 
+        <ImageButton
+            android:id="@+id/tabUser"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/TabBackgroundColor"
+            android:onClick="goToUser"
+            app:srcCompat="@mipmap/ic_launcher" />
+
+    </LinearLayout>
 
 </LinearLayout>

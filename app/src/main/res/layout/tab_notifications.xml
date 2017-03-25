@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -63,33 +64,60 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp">
+                    android:layout_height="75dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerInParent="true"
-                        android:paddingLeft="20dp"
-                        android:text="Username"
-                        android:textSize="25dp" />
+                        android:layout_centerInParent="true">
+
+                        <TextView
+                            android:id="@+id/GameName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="20dp"
+                            android:textSize="20dp"
+                            android:text="Game Name" />
+
+                        <TextView
+                            android:id="@+id/Directions"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="20dp"
+                            android:text="Username Invited You"
+                            android:textSize="15dp" />
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:paddingRight="20dp" >
 
                         <ImageButton
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            app:srcCompat="@android:drawable/checkbox_on_background" />
 
                         <ImageButton
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            app:srcCompat="@android:drawable/btn_dialog" />
 
 
                     </LinearLayout>
+
+
+                    <View
+                        android:id="@+id/viewDivider1"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/colorPrimaryDark"/>
 
                 </RelativeLayout>
 
@@ -143,13 +171,47 @@
 
 
 
-    <fragment
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight=".15"
-        android:id="@+id/frag1"
-        android:name="com.teammeme.dreaminmemes.FragmentTabs"
-        tools:layout="@layout/fragment_tabs_layout"></fragment>
+        android:weightSum="3"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/tabGlobal"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/TabBackgroundColor"
+            android:onClick="goToGlobal"
+            app:srcCompat="@mipmap/ic_launcher" />
+
+        <ImageButton
+            android:id="@+id/tabNotifications"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/TabBackgroundColor"
+            android:onClick="goToNotifications"
+            app:srcCompat="@mipmap/ic_launcher" />
+
+        <ImageButton
+            android:id="@+id/tabUser"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/TabBackgroundColor"
+            android:onClick="goToUser"
+            app:srcCompat="@mipmap/ic_launcher" />
+
+    </LinearLayout>
 
 
 

@@ -2,10 +2,15 @@ package com.teammeme.dreaminmemes;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,6 +47,14 @@ public class Tabs extends AppCompatActivity {
 
     private class TabGlobal {
         void open() {
+
+            List<Fragment> al = getSupportFragmentManager().getFragments();
+            if (al != null) {
+                for (Fragment frag : al) {
+                    getSupportFragmentManager().beginTransaction().remove(frag).commit();
+                }
+            }
+
             setContentView(R.layout.tab_global);
 
             // load the active game ScrollView
@@ -67,36 +80,7 @@ public class Tabs extends AppCompatActivity {
                 r.setId(View.generateViewId());
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpAsPixels70);
 
-                // create the nested linear layout -- will contain two text views
-                LinearLayout l = new LinearLayout(getApplicationContext());
-                RelativeLayout.LayoutParams rParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-                        LayoutParams.WRAP_CONTENT);
-                rParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-                l.setOrientation(LinearLayout.VERTICAL);
-                l.setId(View.generateViewId());
-
-                // create the Game name text view
-                TextView tv1 = new TextView(getApplicationContext());
-                LinearLayout.LayoutParams gameNameParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-                        LayoutParams.WRAP_CONTENT);
-                tv1.setText("Game Name");
-                tv1.setPadding(dpAsPixels20, 0, 0, 0);
-                tv1.setTextSize(20);
-                tv1.setId(View.generateViewId());
-
-                // create the Directions text view
-                TextView tv2 = new TextView(getApplicationContext());
-                LinearLayout.LayoutParams directionParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-                        LayoutParams.WRAP_CONTENT);
-                tv2.setText("Directions");
-                tv2.setPadding(dpAsPixels20, 0, 0, 0);
-                tv2.setTextSize(15);
-                tv2.setTextColor(Color.parseColor("#000000"));
-                tv2.setId(View.generateViewId());
-
-                // add
-                l.addView(tv1, gameNameParams);
-                l.addView(tv2, directionParams);
+                createNestedLinearLayoutWithTextViews(r, "Game Name", "Directions");
 
                 // create the Directions text view
                 TextView tv3 = new TextView(getApplicationContext());
@@ -110,17 +94,10 @@ public class Tabs extends AppCompatActivity {
                 tv3.setId(View.generateViewId());
 
                 // create the divider
-                View divider = new View(getApplicationContext());
-                RelativeLayout.LayoutParams dividerParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-                        1);
-                dividerParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-                divider.setBackgroundColor(Color.parseColor("#000000"));
-                divider.setId(View.generateViewId());
+                createDivider(r);
 
-                // add the linearLayout
-                r.addView(l, rParams);
+                // add the views
                 r.addView(tv3, timeParams);
-                r.addView(divider, dividerParams);
 
                 scrollLayout.addView(r, params);
 
@@ -162,17 +139,9 @@ public class Tabs extends AppCompatActivity {
                 pendingPlayers.setPadding(0, 0, dpAsPixels20, 0);
                 pendingPlayers.setTextSize(15);
 
-                // create the divider
-                View divider = new View(getApplicationContext());
-                RelativeLayout.LayoutParams dividerParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-                        1);
-                dividerParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-                divider.setBackgroundColor(Color.parseColor("#000000"));
-                divider.setId(View.generateViewId());
 
                 r.addView(gameName, gameNameParams);
                 r.addView(pendingPlayers, pendingPlayersParams);
-                r.addView(divider, dividerParams);
 
                 pendingScrollLayout.addView(r, rParams);
 
@@ -187,6 +156,9 @@ public class Tabs extends AppCompatActivity {
                 });
             }
         }
+
+
+
 
         void populateGames() {
             /*ParseUser user = ParseUser.getCurrentUser();
@@ -257,9 +229,64 @@ public class Tabs extends AppCompatActivity {
         }
     }
 
+    public void goToNotifications(View v){
+        tabNotifications.open();
+    }
+
+    public void goToGlobal(View v) {
+        tabGlobal.open();
+    }
+
+    public void goToUser(View v) {
+        tabUser.open();
+    }
+
     private class TabNotifications {
         void open() {
+            List<Fragment> al = getSupportFragmentManager().getFragments();
+            if (al != null) {
+                for (Fragment frag : al) {
+                    getSupportFragmentManager().beginTransaction().remove(frag).commit();
+                }
+            }
+
             setContentView(R.layout.tab_notifications);
+
+            float scale = getResources().getDisplayMetrics().density;
+            int dpAsPixels20 = (int) (20*scale + 0.5f);
+            int dpAsPixels15 = (int) (15*scale + 0.5f);
+            int dpAsPixels70 = (int) (70*scale + 0.5f);
+            int dpAsPixels50 = (int) (50*scale + 0.5f);
+            int dpAsPixels1 = (int) (1*scale + 0.5f);
+
+            int numGameRequests = 5;
+
+            LinearLayout gameRequestsLayout = (LinearLayout)findViewById(R.id.LinLayoutGameRequests);
+
+
+
+            for (int i = 0; i < numGameRequests; i++) {
+                // create the relative layout
+                RelativeLayout r = new RelativeLayout(getApplicationContext());
+                r.setId(View.generateViewId());
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        dpAsPixels70);
+
+                createNestedLinearLayoutWithTextViews(r, "Game Name", "Username Invited You");
+
+                createAcceptDeclineButtons(r);
+
+                createDivider(r);
+
+                gameRequestsLayout.addView(r, params);
+
+
+            }
+
+
+
+
+
         }
     }
 
@@ -278,5 +305,88 @@ public class Tabs extends AppCompatActivity {
     public void createNewLobby(View view) {
         ParseUser user = ParseUser.getCurrentUser();
         tabGlobal.openNewLobby(user.getObjectId());
+    }
+
+    private void createNestedLinearLayoutWithTextViews(RelativeLayout r, String gameName, String belowMessage) {
+
+        float scale = getResources().getDisplayMetrics().density;
+        int dpAsPixels20 = (int) (20*scale + 0.5f);
+
+        LinearLayout l = new LinearLayout(getApplicationContext());
+        RelativeLayout.LayoutParams rParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+                LayoutParams.WRAP_CONTENT);
+        rParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        l.setOrientation(LinearLayout.VERTICAL);
+        l.setId(View.generateViewId());
+
+        // create the Game name text view
+        TextView tv1 = new TextView(getApplicationContext());
+        LinearLayout.LayoutParams gameNameParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT);
+        tv1.setText(gameName);
+        tv1.setPadding(dpAsPixels20, 0, 0, 0);
+        tv1.setTextSize(20);
+        tv1.setId(View.generateViewId());
+
+        // create the Directions text view
+        TextView tv2 = new TextView(getApplicationContext());
+        LinearLayout.LayoutParams directionParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT);
+        tv2.setText(belowMessage);
+        tv2.setPadding(dpAsPixels20, 0, 0, 0);
+        tv2.setTextSize(15);
+        tv2.setTextColor(Color.parseColor("#000000"));
+        tv2.setId(View.generateViewId());
+
+        // add
+        l.addView(tv1, gameNameParams);
+        l.addView(tv2, directionParams);
+
+        r.addView(l, rParams);
+
+    }
+
+    private void createDivider(RelativeLayout r) {
+        // create the divider
+        View divider = new View(getApplicationContext());
+        RelativeLayout.LayoutParams dividerParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+                1);
+        dividerParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+        divider.setBackgroundColor(Color.parseColor("#000000"));
+        divider.setId(View.generateViewId());
+        r.addView(divider, dividerParams);
+    }
+
+    private void createAcceptDeclineButtons(RelativeLayout r) {
+        float scale = getResources().getDisplayMetrics().density;
+        int dpAsPixels20 = (int) (20*scale + 0.5f);
+        int dpAsPixels70 = (int) (70*scale + 0.5f);
+        int dpAsPixels50 = (int) (50*scale + 0.5f);
+
+        LinearLayout l = new LinearLayout(getApplicationContext());
+        RelativeLayout.LayoutParams rParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT);
+        rParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        rParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        l.setPadding(0, 0, dpAsPixels20, 0);
+        l.setOrientation(LinearLayout.HORIZONTAL);
+
+        ImageButton acceptButton = new ImageButton(getApplicationContext());
+        LinearLayout.LayoutParams acceptParams = new LinearLayout.LayoutParams(dpAsPixels50,
+                dpAsPixels50);
+
+        ImageButton rejectButton = new ImageButton(getApplicationContext());
+        LinearLayout.LayoutParams rejectParams = new LinearLayout.LayoutParams(dpAsPixels50,
+                dpAsPixels50);
+
+        // set on click listeners for buttons
+
+        l.addView(acceptButton, acceptParams);
+        l.addView(rejectButton, rejectParams);
+
+        r.addView(l, rParams);
+
+
+
     }
 }
