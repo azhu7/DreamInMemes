@@ -2,9 +2,6 @@ package com.teammeme.dreaminmemes;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-
-import com.parse.Parse;
 
 public class Tabs extends AppCompatActivity {
     private TabGlobal tab_global;
@@ -30,7 +27,7 @@ public class Tabs extends AppCompatActivity {
 
     private class TabNotifications {
         public void open() {
-            setContentView(R.layout.tab_create_game);
+            setContentView(R.layout.tab_notifications);
         }
     }
 
@@ -38,4 +35,5 @@ public class Tabs extends AppCompatActivity {
         public void open() {
             setContentView(R.layout.tab_user);
         }
+    }
 }
