@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         user.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Welcome! You have been registered.", Toast.LENGTH_SHORT).show();
             }
         });
     }

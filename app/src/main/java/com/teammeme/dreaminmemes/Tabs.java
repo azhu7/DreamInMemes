@@ -14,10 +14,14 @@ public class Tabs extends AppCompatActivity {
         setContentView(R.layout.tab_global);
     }
 
-    public void go_to_create_game(View v) {
+    // Buttons can use these functions to switch layouts (tabs)
+    public void open_tab_global(View v) {
         setContentView(R.layout.tab_create_game);
-
     }
-
-
+    public void open_tab_notifications(View v) {
+        setContentView(R.layout.tab_global);
+    }
+    public void open_tab_user(View v) {
+        setContentView(R.layout.tab_global);
+    }
 }
