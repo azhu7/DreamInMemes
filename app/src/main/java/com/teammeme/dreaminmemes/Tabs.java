@@ -52,16 +52,17 @@ public class Tabs extends AppCompatActivity {
             // this is the scrollView's one and only child, which holds all the active games
             LinearLayout scrollLayout = (LinearLayout)findViewById(R.id.LinLayoutActiveGames);
 
+            // pendingScrollView's child
+            LinearLayout pendingScrollLayout = (LinearLayout)findViewById(R.id.LinLayoutPendingGames);
+
             float scale = getResources().getDisplayMetrics().density;
             int dpAsPixels20 = (int) (20*scale + 0.5f);
             int dpAsPixels15 = (int) (15*scale + 0.5f);
             int dpAsPixels70 = (int) (70*scale + 0.5f);
+            int dpAsPixels50 = (int) (50*scale + 0.5f);
             int dpAsPixels1 = (int) (1*scale + 0.5f);
 
             for (int i = 0; i < numActiveGames; i++) {
-
-
-                
 
                 // create the relative layout
                 RelativeLayout r = new RelativeLayout(getApplicationContext());
@@ -127,7 +128,6 @@ public class Tabs extends AppCompatActivity {
                 scrollLayout.addView(r, params);
 
                 r.setClickable(true);
-
                 r.setOnClickListener(new View.OnClickListener(){
 
                     @Override
@@ -139,17 +139,60 @@ public class Tabs extends AppCompatActivity {
             }
 
 
-            int numPendingGames = 2;
+            int numPendingGames = 5;
 
             for (int i = 0; i < numPendingGames; i++) {
 
+
+                RelativeLayout r = new RelativeLayout(getApplicationContext());
+                LinearLayout.LayoutParams rParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+                        dpAsPixels50);
+
+                // Text view with game name
                 TextView gameName = new TextView(getApplicationContext());
-                
+                RelativeLayout.LayoutParams gameNameParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+                        LayoutParams.WRAP_CONTENT);
+                gameNameParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+                gameName.setText("Game Name");
+                gameName.setTextSize(20);
+                gameName.setId(View.generateViewId());
+                gameName.setPadding(dpAsPixels20, 0, 0, 0);
 
 
+                // Text view with players pending
+                TextView pendingPlayers = new TextView(getApplicationContext());
+                RelativeLayout.LayoutParams pendingPlayersParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+                        LayoutParams.WRAP_CONTENT);
+                pendingPlayersParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+                pendingPlayersParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+                pendingPlayers.setText("2 Pending Players");
+                pendingPlayers.setPadding(0, 0, dpAsPixels20, 0);
+                pendingPlayers.setTextSize(15);
 
 
+                // create the divider
+                View divider = new View(getApplicationContext());
+                RelativeLayout.LayoutParams dividerParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+                        1);
+                dividerParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+                divider.setBackgroundColor(Color.parseColor("#000000"));
+                divider.setId(View.generateViewId());
 
+                r.addView(gameName, gameNameParams);
+                r.addView(pendingPlayers, pendingPlayersParams);
+                r.addView(divider, dividerParams);
+
+                pendingScrollLayout.addView(r, rParams);
+
+                r.setClickable(true);
+                r.setOnClickListener(new View.OnClickListener(){
+
+                    @Override
+                    public void onClick(View v){
+                        Toast.makeText(getApplicationContext(), "Hello from " + v.getId(), Toast.LENGTH_SHORT).show();
+                    }
+
+                });
 
 
             }

@@ -114,43 +114,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp">
-
-                    <TextView
-                        android:id="@+id/GameName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingLeft="20dp"
-                        android:textSize="20dp"
-                        android:text="Game Name" />
-
-                    <TextView
-                        android:id="@+id/TimeLeft"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerInParent="true"
-                        android:paddingRight="20dp"
-                        android:paddingLeft="20dp"
-                        android:text="2 Players Pending"
-                        android:textSize="15dp" />
-
-                    <View
-                        android:id="@+id/viewDivider1"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/DividerColor"/>
-
-                </RelativeLayout>
-
-
-
-
             </LinearLayout>
         </ScrollView>
 
