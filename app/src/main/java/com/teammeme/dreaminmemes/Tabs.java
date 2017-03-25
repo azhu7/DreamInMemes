@@ -12,14 +12,17 @@ import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Tabs extends AppCompatActivity {
     private TabGlobal tabGlobal;
@@ -59,9 +62,9 @@ public class Tabs extends AppCompatActivity {
             int dpAsPixels1 = (int) (1*scale + 0.5f);
 
             for (int i = 0; i < numActiveGames; i++) {
-
                 // create the relative layout
                 RelativeLayout r = new RelativeLayout(getApplicationContext());
+                r.setId(View.generateViewId());
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpAsPixels70);
 
                 // create the nested linear layout -- will contain two text views
@@ -95,7 +98,6 @@ public class Tabs extends AppCompatActivity {
                 l.addView(tv1, gameNameParams);
                 l.addView(tv2, directionParams);
 
-
                 // create the Directions text view
                 TextView tv3 = new TextView(getApplicationContext());
                 RelativeLayout.LayoutParams timeParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
@@ -106,7 +108,6 @@ public class Tabs extends AppCompatActivity {
                 tv3.setPadding(0,0, dpAsPixels20, 0);
                 tv3.setTextSize(15);
                 tv3.setId(View.generateViewId());
-
 
                 // create the divider
                 View divider = new View(getApplicationContext());
@@ -130,17 +131,14 @@ public class Tabs extends AppCompatActivity {
                     public void onClick(View v){
                        Toast.makeText(getApplicationContext(), "Hello from " + v.getId(), Toast.LENGTH_SHORT).show();
                     }
-
                 });
             }
-
 
             int numPendingGames = 5;
 
             for (int i = 0; i < numPendingGames; i++) {
-
-
                 RelativeLayout r = new RelativeLayout(getApplicationContext());
+                r.setId(View.generateViewId());
                 LinearLayout.LayoutParams rParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
                         dpAsPixels50);
 
@@ -154,7 +152,6 @@ public class Tabs extends AppCompatActivity {
                 gameName.setId(View.generateViewId());
                 gameName.setPadding(dpAsPixels20, 0, 0, 0);
 
-
                 // Text view with players pending
                 TextView pendingPlayers = new TextView(getApplicationContext());
                 RelativeLayout.LayoutParams pendingPlayersParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
@@ -164,7 +161,6 @@ public class Tabs extends AppCompatActivity {
                 pendingPlayers.setText("2 Pending Players");
                 pendingPlayers.setPadding(0, 0, dpAsPixels20, 0);
                 pendingPlayers.setTextSize(15);
-
 
                 // create the divider
                 View divider = new View(getApplicationContext());
@@ -189,12 +185,30 @@ public class Tabs extends AppCompatActivity {
                     }
 
                 });
-
-
             }
+        }
 
+        void populateGames() {
+            /*ParseUser user = ParseUser.getCurrentUser();
+            assert user != null : "TabGlobal::populateGames error: user doesn't exist.";
+            final String userId = user.getObjectId();
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("Lobby");
+            query.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List<ParseObject> lobbies, ParseException e) {
+                    if (e == null) {
+                        for (ParseObject lobby : lobbies) {
+                            List<String> players = lobby.getList("players");
+                            // Player is part of this game
+                            if (players.contains(userId)) {
 
-
+                            }
+                        }
+                    } else {
+                        Log.d("*****TabGlobal", "Error: " + e.getMessage());
+                    }
+                }
+            });*/
         }
 
         // Store blank lobby (containing owner only) to DB and switch activity
@@ -219,6 +233,10 @@ public class Tabs extends AppCompatActivity {
                         Intent i = new Intent(getApplicationContext(), Lobby.class);
                         i.putExtra("lobbyId", dataObject.getObjectId());
                         startActivity(i);
+                        ParseUser user = ParseUser.getCurrentUser();
+                        List<String> temp = user.getList("lobbies");
+                        temp.add(dataObject.getObjectId());
+                        user.add("lobbies", temp);
                     } else {
                         // Failure
                         Log.d("*****TabGlobal", "Error saving lobby: " + e.getMessage());

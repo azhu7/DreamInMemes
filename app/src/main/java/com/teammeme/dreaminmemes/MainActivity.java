@@ -13,9 +13,12 @@ import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
+
+import java.util.ArrayList;
 
 
 // MainActivity connects to Parse Server and initializes Login screen. Provides functionality
@@ -79,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
         installation.put("TempSenderID", "1234567890");
         installation.saveInBackground();
-
+        ParseUser.getCurrentUser().logOut();
         // Check if user info is cached on disk. If so, go directly to Tabs
         if (ParseUser.getCurrentUser() != null) {
             Intent i = new Intent(getApplicationContext(), Tabs.class);
@@ -120,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
         ParseUser user = new ParseUser();
         user.setUsername(et_username.getText().toString());
         user.setPassword(et_password.getText().toString());
+        user.add("lobbies", new ArrayList<String>());
+
         user.signUpInBackground(new SignUpCallback() {
             @Override
             public void done(ParseException e) {
