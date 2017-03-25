@@ -72,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                
+
 
             </LinearLayout>
         </ScrollView>
@@ -83,9 +83,76 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".375" >
+        android:layout_weight=".375"
+        android:orientation="vertical">
 
 
+        <TextView
+            android:id="@+id/txtViewPendingGames"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingLeft="15dp"
+            android:text="Pending Games"
+            android:textColor="@color/MainTheme"
+            android:textSize="25dp" />
+
+        <View
+            android:id="@+id/viewDivider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/MainTheme" />
+
+        <ScrollView
+            android:id="@+id/ScrollViewPendingGames"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/LinLayoutPendingGames"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp">
+
+                    <TextView
+                        android:id="@+id/GameName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:paddingLeft="20dp"
+                        android:textSize="20dp"
+                        android:text="Game Name" />
+
+                    <TextView
+                        android:id="@+id/TimeLeft"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:paddingRight="20dp"
+                        android:paddingLeft="20dp"
+                        android:text="2 Players Pending"
+                        android:textSize="15dp" />
+
+                    <View
+                        android:id="@+id/viewDivider1"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/DividerColor"/>
+
+                </RelativeLayout>
+
+
+
+
+            </LinearLayout>
+        </ScrollView>
 
 
     </LinearLayout>

@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -47,7 +48,7 @@ public class Tabs extends AppCompatActivity {
             // load the active game ScrollView
             // will need to use parse to get the number of active games the user is a part of
 
-            int numActiveGames = 2;
+            int numActiveGames = 5;
             // this is the scrollView's one and only child, which holds all the active games
             LinearLayout scrollLayout = (LinearLayout)findViewById(R.id.LinLayoutActiveGames);
 
@@ -60,7 +61,7 @@ public class Tabs extends AppCompatActivity {
             for (int i = 0; i < numActiveGames; i++) {
 
 
-
+                
 
                 // create the relative layout
                 RelativeLayout r = new RelativeLayout(getApplicationContext());
@@ -125,8 +126,38 @@ public class Tabs extends AppCompatActivity {
 
                 scrollLayout.addView(r, params);
 
+                r.setClickable(true);
+
+                r.setOnClickListener(new View.OnClickListener(){
+
+                    @Override
+                    public void onClick(View v){
+                       Toast.makeText(getApplicationContext(), "Hello from " + v.getId(), Toast.LENGTH_SHORT).show();
+                    }
+
+                });
             }
+
+
+            int numPendingGames = 2;
+
+            for (int i = 0; i < numPendingGames; i++) {
+
+                TextView gameName = new TextView(getApplicationContext());
+                
+
+
+
+
+
+
+
+            }
+
+
+
         }
+
 
         // Store blank lobby (containing owner only) to DB
         void startBlankLobby(String ownerId) {
