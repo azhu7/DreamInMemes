@@ -20,19 +20,19 @@ public class Tabs extends AppCompatActivity {
     }
 
     private class TabGlobal {
-        public void open() {
+        void open() {
             setContentView(R.layout.tab_global);
         }
     }
 
     private class TabNotifications {
-        public void open() {
+        void open() {
             setContentView(R.layout.tab_notifications);
         }
     }
 
     private class TabUser {
-        public void open() {
+        void open() {
             setContentView(R.layout.tab_user);
         }
     }
