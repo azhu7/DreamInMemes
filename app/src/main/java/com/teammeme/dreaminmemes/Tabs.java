@@ -11,17 +11,17 @@ public class Tabs extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.tab_global);
+        open_tab_global(getCurrentFocus());
     }
 
     // Buttons can use these functions to switch layouts (tabs)
     public void open_tab_global(View v) {
-        setContentView(R.layout.tab_create_game);
+        setContentView(R.layout.tab_global);
     }
     public void open_tab_notifications(View v) {
-        setContentView(R.layout.tab_global);
+        setContentView(R.layout.tab_create_game);
     }
     public void open_tab_user(View v) {
-        setContentView(R.layout.tab_global);
+        setContentView(R.layout.tab_user);
     }
 }
