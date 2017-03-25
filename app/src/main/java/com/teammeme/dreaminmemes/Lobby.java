@@ -10,10 +10,16 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+<<<<<<< Updated upstream
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+=======
+import android.widget.LinearLayout;
+import android.widget.Toast;
+>>>>>>> Stashed changes
 
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -175,13 +181,11 @@ public class Lobby extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String username = input.getText().toString();
 
-
             }
         });
 
         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                // Canceled.
 
             }
         });

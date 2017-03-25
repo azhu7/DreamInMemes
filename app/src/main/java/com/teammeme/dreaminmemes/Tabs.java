@@ -347,12 +347,12 @@ public class Tabs extends AppCompatActivity {
         float scale = getResources().getDisplayMetrics().density;
         int dpAsPixels20 = (int) (20*scale + 0.5f);
 
-        LinearLayout l = new LinearLayout(getApplicationContext());
+        LinearLayout LL = new LinearLayout(getApplicationContext());
         RelativeLayout.LayoutParams rParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
                 LayoutParams.WRAP_CONTENT);
         rParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-        l.setOrientation(LinearLayout.VERTICAL);
-        l.setId(View.generateViewId());
+        LL.setOrientation(LinearLayout.VERTICAL);
+        LL.setId(View.generateViewId());
 
         // create the Game name text view
         TextView tv1 = new TextView(getApplicationContext());
@@ -374,10 +374,10 @@ public class Tabs extends AppCompatActivity {
         tv2.setId(View.generateViewId());
 
         // add
-        l.addView(tv1, gameNameParams);
-        l.addView(tv2, directionParams);
+        LL.addView(tv1, gameNameParams);
+        LL.addView(tv2, directionParams);
 
-        r.addView(l, rParams);
+        r.addView(LL, rParams);
 
     }
 
@@ -398,13 +398,13 @@ public class Tabs extends AppCompatActivity {
         int dpAsPixels70 = (int) (70*scale + 0.5f);
         int dpAsPixels50 = (int) (50*scale + 0.5f);
 
-        LinearLayout l = new LinearLayout(getApplicationContext());
+        LinearLayout LL = new LinearLayout(getApplicationContext());
         RelativeLayout.LayoutParams rParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT);
         rParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
         rParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-        l.setPadding(0, 0, dpAsPixels20, 0);
-        l.setOrientation(LinearLayout.HORIZONTAL);
+        LL.setPadding(0, 0, dpAsPixels20, 0);
+        LL.setOrientation(LinearLayout.HORIZONTAL);
 
         ImageButton acceptButton = new ImageButton(getApplicationContext());
         LinearLayout.LayoutParams acceptParams = new LinearLayout.LayoutParams(dpAsPixels50,
@@ -416,10 +416,10 @@ public class Tabs extends AppCompatActivity {
 
         // set on click listeners for buttons
 
-        l.addView(acceptButton, acceptParams);
-        l.addView(rejectButton, rejectParams);
+        LL.addView(acceptButton, acceptParams);
+        LL.addView(rejectButton, rejectParams);
 
-        r.addView(l, rParams);
+        r.addView(LL, rParams);
     }
 
     private void createActiveRelativeLayout(LinearLayout l, String gameName, String directions, int timeLeft) {
@@ -465,7 +465,7 @@ public class Tabs extends AppCompatActivity {
         l.addView(r, params);
     }
 
-    private void createPendingRelativeLayout(LinearLayout l, String gameName, int playersPending, int timeLeft) {
+    private void createPendingRelativeLayout(LinearLayout LL, String gameName, int playersPending, int timeLeft) {
 
         float scale = getResources().getDisplayMetrics().density;
         int dpAsPixels20 = (int) (20*scale + 0.5f);
@@ -513,6 +513,6 @@ public class Tabs extends AppCompatActivity {
 
         });
 
-        l.addView(r, rParams);
+        LL.addView(r, rParams);
     }
 }
