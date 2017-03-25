@@ -8,34 +8,87 @@
     android:weightSum="1"
     tools:context="com.teammeme.dreaminmemes.Tabs">
 
-
-    <ImageButton
-        android:id="@+id/btnCreateNewLobby"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="createNewLobby"
-        app:srcCompat="@mipmap/ic_launcher" />
+        android:layout_height="0dp"
+        android:layout_weight=".10">
+
+
+        <TextView
+            android:textSize="35dp"
+            android:id="@+id/txtAllGames"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAlignment="center"
+            android:paddingTop="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true"
+            android:text="All Games" />
+
+        <ImageButton
+            android:id="@+id/btnCreateNewLobby"
+
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:onClick="createNewLobby"
+            app:srcCompat="@mipmap/ic_launcher" />
+
+
+    </RelativeLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".85"
-        android:orientation="vertical"
-        android:weightSum="1">
+        android:layout_weight=".375"
+        android:orientation="vertical">
+
 
         <TextView
-            android:id="@+id/txtAllGames"
+            android:id="@+id/txtViewActiveGames"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="All Games"
+            android:paddingBottom="10dp"
+            android:paddingLeft="15dp"
+            android:text="Active Games"
+            android:textColor="@color/MainTheme"
+            android:textSize="25dp" />
 
-            android:textColor="@color/MainTheme" />
+        <View
+            android:id="@+id/viewDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/MainTheme" />
+
+        <ScrollView
+            android:id="@+id/ScrollViewActiveGames"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/LinLayoutActiveGames"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                
+
+            </LinearLayout>
+        </ScrollView>
 
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".375" >
 
+
+
+
+    </LinearLayout>
 
 
     <fragment
