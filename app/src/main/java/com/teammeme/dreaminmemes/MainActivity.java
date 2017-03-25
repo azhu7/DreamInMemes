@@ -1,15 +1,8 @@
 package com.teammeme.dreaminmemes;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,7 +19,7 @@ import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
 // MainActivity connects to Parse Server and initializes Login screen. Provides functionality
-// for logging in and
+// for logging in and registering user.
 public class MainActivity extends AppCompatActivity {
     EditText et_username, et_password;
     Button login, register;
@@ -86,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
         installation.put("TempSenderID", "1234567890");
         installation.saveInBackground();
-
     }
 
     void parseLogin(){
@@ -95,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
             public void done(ParseUser parseUser, ParseException e) {
                 if (parseUser != null) {
                     Toast.makeText(getApplicationContext(), "Successfully logged in.", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(getApplicationContext(), Tabs.class);
+                    startActivity(i);
                     //progressDialog.dismiss();
                     //getUserDetailFromParse();
                 } else {
