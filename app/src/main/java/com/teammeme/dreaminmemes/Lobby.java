@@ -30,9 +30,9 @@ public class Lobby extends AppCompatActivity {
         GameInit, ChoosePicture, Captioning, ChooseWinner, ShowScores
     }
 
-    private class PlayerInfo {
+    public static class PlayerInfo {
         String id;
-        int points;
+        int points = 0;
     }
 
     @Override

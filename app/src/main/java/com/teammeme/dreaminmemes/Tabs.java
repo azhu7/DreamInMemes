@@ -18,6 +18,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -157,37 +158,52 @@ public class Tabs extends AppCompatActivity {
             }
         }
 
-
-
-
+        // Populate active and pending games by querying user's lobbies
         void populateGames() {
-            /*ParseUser user = ParseUser.getCurrentUser();
+            final ParseUser user = ParseUser.getCurrentUser();
             assert user != null : "TabGlobal::populateGames error: user doesn't exist.";
-            final String userId = user.getObjectId();
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("Lobby");
-            query.findInBackground(new FindCallback<ParseObject>() {
-                @Override
-                public void done(List<ParseObject> lobbies, ParseException e) {
-                    if (e == null) {
-                        for (ParseObject lobby : lobbies) {
-                            List<String> players = lobby.getList("players");
-                            // Player is part of this game
-                            if (players.contains(userId)) {
-
+            List<String> lobbies = user.getList("lobbies");
+            // Query for all of user's lobbies
+            for (String lobbyId : lobbies) {
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("Lobby");
+                query.getInBackground(lobbyId, new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        if (e == null) {
+                            // PENDING
+                            if (object.getInt("state") == Lobby.State.GameInit.ordinal()) {
+                                // GENERATE PENDING BOX
+                                Log.d("*****populateGames", "User is in pending lobby: " + object.getObjectId());
                             }
+                            // ACTIVE
+                            else {
+                                // GENERATE ACTIVE BOX
+                                List<String> temp = object.getList("judgeQueue");
+                                LinkedList<String> judgeQueue = new LinkedList<String>(temp);
+                                if (judgeQueue.peekFirst() == user.getObjectId()) {
+                                    // JUDGE
+                                    Log.d("*****populateGames", "User is judge of " + object.getObjectId());
+                                } else {
+                                    // NOT JUDGE
+                                    Log.d("*****populateGames", "User is not judge of " + object.getObjectId());
+                                }
+                            }
+                        } else {
+                            // ERROR
+                            Log.d("*****populateGames", "Error: could not pull up user's lobby: " + object.getObjectId());
                         }
-                    } else {
-                        Log.d("*****TabGlobal", "Error: " + e.getMessage());
                     }
-                }
-            });*/
+                });
+            }
         }
 
         // Store blank lobby (containing owner only) to DB and switch activity
         void openNewLobby(String lobbyId) {
-            ArrayList<String> players = new ArrayList<>();
+            ArrayList<Lobby.PlayerInfo> players = new ArrayList<>();
             LinkedList<String> judgeQueue = new LinkedList<>();
-            players.add(lobbyId);
+            Lobby.PlayerInfo ownerInfo = new Lobby.PlayerInfo();
+            ownerInfo.id = lobbyId;
+            players.add(ownerInfo);
             judgeQueue.add(lobbyId);
 
             // Write to DB
@@ -299,6 +315,7 @@ public class Tabs extends AppCompatActivity {
     public void logOut(View v){
         ParseUser user = ParseUser.getCurrentUser();
         user.logOut();
+        finish();
     }
 
     // Attached to new lobby button
