@@ -148,7 +148,7 @@ public class Lobby extends AppCompatActivity {
                     List<String> tempJudgeQueue = object.getList("judgeQueue");
                     judgeQueue = new LinkedList<String>(tempJudgeQueue);
                     roundNum = object.getInt("roundNum");
-                    isJudge = judgeQueue.peekFirst() == ParseUser.getCurrentUser().getObjectId();
+                    isJudge = judgeQueue.peekFirst().equals(ParseUser.getCurrentUser().getObjectId());
                     state = State.values()[object.getInt("state")];
                     loadLayout();
                     //TODO: for saveLobby debug
@@ -175,20 +175,21 @@ public class Lobby extends AppCompatActivity {
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 final String username = input.getText().toString();
-                if (username == ParseUser.getCurrentUser().getUsername()) {
+                if (username.equals(ParseUser.getCurrentUser().getUsername())) {
                     Toast.makeText(getApplicationContext(), "You can't invite yourself to the lobby.", Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 ParseQuery<ParseUser> query = ParseUser.getQuery();
                 query.whereEqualTo("username", username);
                 query.findInBackground(new FindCallback<ParseUser>() {
                     public void done(List<ParseUser> objects, ParseException e) {
-                        if (e == null) {
-                            assert objects.size() == 1: "Error: more than one user with that username??";
+                        if (e == null && objects.size() == 1) {
                             // Make the list item
                             LinearLayout LL = (LinearLayout)findViewById(R.id.LinLayoutFriendInvite);
                             createFriendInviteListItem(LL, username);
                         } else {
                             Toast.makeText(getApplicationContext(), "Could not find user!", Toast.LENGTH_SHORT).show();
+                            return;
                         }
                     }
                 });

@@ -195,7 +195,7 @@ public class Tabs extends AppCompatActivity {
 
                                 List<String> temp = object.getList("judgeQueue");
                                 LinkedList<String> judgeQueue = new LinkedList<String>(temp);
-                                if (judgeQueue.peekFirst() == user.getObjectId()) {
+                                if (judgeQueue.peekFirst().equals(user.getObjectId())) {
                                     // JUDGE
                                     Log.d("*****populateGames", "User is judge of " + object.getObjectId());
                                 } else {
