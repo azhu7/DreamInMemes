@@ -8,16 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
-<<<<<<< Updated upstream
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-=======
-import android.widget.LinearLayout;
 import android.widget.Toast;
->>>>>>> Stashed changes
 
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -179,14 +174,30 @@ public class Lobby extends AppCompatActivity {
 
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                String username = input.getText().toString();
-
+                final String username = input.getText().toString();
+                if (username == ParseUser.getCurrentUser().getUsername()) {
+                    Toast.makeText(getApplicationContext(), "You can't invite yourself to the lobby.", Toast.LENGTH_SHORT).show();
+                }
+                ParseQuery<ParseUser> query = ParseUser.getQuery();
+                query.whereEqualTo("username", username);
+                query.findInBackground(new FindCallback<ParseUser>() {
+                    public void done(List<ParseUser> objects, ParseException e) {
+                        if (e == null) {
+                            assert objects.size() == 1: "Error: more than one user with that username??";
+                            // Make the list item
+                            LinearLayout LL = (LinearLayout)findViewById(R.id.LinLayoutFriendInvite);
+                            createFriendInviteListItem(LL, username);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Could not find user!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
 
         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-
+                dialog.cancel();
             }
         });
 
