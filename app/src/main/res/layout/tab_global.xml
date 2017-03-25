@@ -1,18 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="2"
+    android:weightSum="1"
     tools:context="com.teammeme.dreaminmemes.Tabs">
 
 
+    <ImageButton
+        android:id="@+id/btnCreateNewLobby"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="createNewLobby"
+        app:srcCompat="@mipmap/ic_launcher" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.7">
+        android:layout_weight=".85"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/txtAllGames"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="All Games"
+
+            android:textColor="@color/MainTheme" />
+
 
     </LinearLayout>
 
@@ -22,10 +41,10 @@
     <fragment
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".3"
+        android:layout_weight=".15"
         android:id="@+id/frag1"
         android:name="com.teammeme.dreaminmemes.FragmentTabs"
-    ></fragment>
+        tools:layout="@layout/fragment_tabs_layout"></fragment>
 
 
 

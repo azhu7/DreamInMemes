@@ -1,7 +1,9 @@
 package com.teammeme.dreaminmemes;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
 public class Tabs extends AppCompatActivity {
     private TabGlobal tab_global;
@@ -35,5 +37,14 @@ public class Tabs extends AppCompatActivity {
         void open() {
             setContentView(R.layout.tab_user);
         }
+    }
+
+    public void createNewLobby(View view) {
+
+        Intent i = new Intent(getApplicationContext(), Lobby.class);
+        i.putExtra("ID", 42);
+        startActivity(i);
+
+
     }
 }
