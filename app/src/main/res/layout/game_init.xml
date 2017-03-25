@@ -106,12 +106,11 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/LinLayoutFriendInvite"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.22"
         android:orientation="vertical">
-
-
     </LinearLayout>
 
     <RelativeLayout
