@@ -193,13 +193,14 @@ public class Lobby extends AppCompatActivity {
                         query.whereEqualTo("objectId", userId);
                         // Query for user with this userId
                         query.findInBackground(new FindCallback<ParseUser>() {
-                            public void done(List<ParseUser> objects, ParseException e) {
-                                if (e == null && objects.size() == 1) {
+                            public void done(List<ParseUser> users, ParseException e) {
+                                if (e == null && users.size() == 1) {
                                     // The query was successful.
-                                    List<String> lobbies = objects.get(0).getList("lobbies");
+                                    ParseUser user = users.get(0);
+                                    List<String> lobbies = user.getList("lobbies");
                                     lobbies.remove(object.getObjectId());  // Remove this lobby
-                                    object.put("lobbies", lobbies);
-                                    object.saveInBackground();
+                                    user.put("lobbies", lobbies);
+                                    user.saveInBackground();
                                 } else {
                                     Log.d("*****Lobby", "closeLobby failed to find user with objectId: " + userId);
                                 }
