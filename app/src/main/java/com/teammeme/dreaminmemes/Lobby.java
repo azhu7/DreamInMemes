@@ -18,73 +18,28 @@ import java.util.List;
 
 public class Lobby extends AppCompatActivity {
     String name;
-    ArrayList<Integer> players;  // Player IDs
-    LinkedList<Integer> judgeQueue;  // Maintains order of judges
+    ArrayList<String> players;  // Player IDs
+    LinkedList<String> judgeQueue;  // Maintains order of judges
     int roundNum;
     boolean isJudge;
     State state;
 
-    private enum State {
+    public enum State {
         GameInit, ChoosePicture, Captioning, ChooseWinner, ShowScores
-    }
-
-    // Store blank lobby (containing owner only) to DB
-    static String store_blank_lobby(Integer ownerId) {
-        ArrayList<Integer> players = new ArrayList<>();
-        LinkedList<Integer> judgeQueue = new LinkedList<>();
-        players.add(ownerId);
-        judgeQueue.add(ownerId);
-        return store_lobby("blank", players, judgeQueue, 1, State.GameInit);
-    }
-
-    // Store lobby to DB
-    private static String store_lobby(String name, ArrayList<Integer> players,
-                            LinkedList<Integer> judgeQueue, int roundNum, State state) {
-        // Write to DB
-        ParseObject dataObject = ParseObject.create("Lobby");
-        dataObject.put("name", name);
-        dataObject.put("players", players);
-        dataObject.put("judgeQueue", judgeQueue);
-        dataObject.put("roundNum", roundNum);
-        dataObject.put("state", state.ordinal());
-        dataObject.saveInBackground();
-        return dataObject.getObjectId();
-    }
-
-    // Load specified lobby from DB
-    void load_lobby(String lobbyId) {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Lobby");
-        query.getInBackground(lobbyId, new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject object, ParseException e) {
-                if (e == null) {
-                    name = object.getString("name");
-                    List<Integer> temp = object.getList("players");
-                    players = new ArrayList<Integer>(temp);
-                    temp = object.getList("judgeQueue");
-                    judgeQueue = new LinkedList<Integer>(temp);
-                    roundNum = object.getInt("roundNum");
-                    state = State.values()[object.getInt("state")];
-                } else {
-                    Log.d("*****Lobby", "Error: " + e.getMessage());
-                }
-            }
-        });
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Select which layout to open
-        String lobbyId = getIntent().getStringExtra("ID");
-        load_lobby(lobbyId);
+        String lobbyId = getIntent().getStringExtra("lobbyId");
+        loadLobby(lobbyId);
         //boolean isJudge = false;
-        load_layout();
         //run();
     }
 
     // Load layout based on current state
-    private void load_layout() {
+    private void loadLayout() {
         setContentView(R.layout.game_init);  // Temporary
         /*if (isJudge) {
             switch (state) {
@@ -144,5 +99,52 @@ public class Lobby extends AppCompatActivity {
                     // Show scores. Next round starts in 1 minute ->
             }
         }
+    }
+
+    // Store lobby to DB
+    private void storeLobby() {
+        // Write to DB: TODO: Query object and alter contents? How?
+        /*final ParseObject dataObject = ParseObject.create("Lobby");
+        dataObject.put("name", name);
+        dataObject.put("players", players);
+        dataObject.put("judgeQueue", judgeQueue);
+        dataObject.put("roundNum", roundNum);
+        dataObject.put("state", state.ordinal());
+
+        dataObject.saveInBackground(new SaveCallback() {
+            public void done(ParseException e) {
+                if (e == null) {
+                    // Successful save to DB
+                    Intent i = new Intent(getApplicationContext(), Lobby.class);
+                    i.putExtra("lobbyId", dataObject.getObjectId());
+                    startActivity(i);
+                } else {
+                    // Failure
+                    Log.d("*****TabGlobal", "Error saving lobby: " + e.getMessage());
+                }
+            }
+        });*/
+    }
+
+    // Load specified lobby from DB
+    void loadLobby(String lobbyId) {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Lobby");
+        query.getInBackground(lobbyId, new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    name = object.getString("name");
+                    List<String> temp = object.getList("players");
+                    players = new ArrayList<String>(temp);
+                    temp = object.getList("judgeQueue");
+                    judgeQueue = new LinkedList<String>(temp);
+                    roundNum = object.getInt("roundNum");
+                    state = State.values()[object.getInt("state")];
+                    loadLayout();
+                } else {
+                    Log.d("*****Lobby", "Error: " + e.getMessage());
+                }
+            }
+        });
     }
 }

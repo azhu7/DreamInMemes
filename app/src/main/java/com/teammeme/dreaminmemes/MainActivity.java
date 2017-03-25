@@ -13,10 +13,10 @@ import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
+
 
 // MainActivity connects to Parse Server and initializes Login screen. Provides functionality
 // for logging in and registering user.
@@ -82,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void parseLogin(){
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        currentUser.logOut();
         ParseUser.logInInBackground(et_username.getText().toString(), et_password.getText().toString(), new LogInCallback() {
             @Override
             public void done(ParseUser parseUser, ParseException e) {

@@ -6,6 +6,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -13,22 +14,30 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
 
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 public class Tabs extends AppCompatActivity {
-    private TabGlobal tab_global;
-    private TabNotifications tab_notifications;
-    private TabUser tab_user;
+    private TabGlobal tabGlobal;
+    private TabNotifications tabNotifications;
+    private TabUser tabUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tab_global = new TabGlobal();
-        tab_notifications = new TabNotifications();
-        tab_user = new TabUser();
+        tabGlobal = new TabGlobal();
+        tabNotifications = new TabNotifications();
+        tabUser = new TabUser();
 
         // Start with Global tab
-        tab_global.open();
+        tabGlobal.open();
     }
 
     private class TabGlobal {
@@ -117,11 +126,36 @@ public class Tabs extends AppCompatActivity {
                 scrollLayout.addView(r, params);
 
             }
+        }
 
+        // Store blank lobby (containing owner only) to DB
+        void startBlankLobby(String ownerId) {
+            ArrayList<String> players = new ArrayList<>();
+            LinkedList<String> judgeQueue = new LinkedList<>();
+            players.add(ownerId);
+            judgeQueue.add(ownerId);
 
+            // Write to DB
+            final ParseObject dataObject = ParseObject.create("Lobby");
+            dataObject.put("name", "blank");
+            dataObject.put("players", players);
+            dataObject.put("judgeQueue", judgeQueue);
+            dataObject.put("roundNum", 1);
+            dataObject.put("state", Lobby.State.GameInit.ordinal());
 
-
-
+            dataObject.saveInBackground(new SaveCallback() {
+                public void done(ParseException e) {
+                    if (e == null) {
+                        // Successful save to DB
+                        Intent i = new Intent(getApplicationContext(), Lobby.class);
+                        i.putExtra("lobbyId", dataObject.getObjectId());
+                        startActivity(i);
+                    } else {
+                        // Failure
+                        Log.d("*****TabGlobal", "Error saving lobby: " + e.getMessage());
+                    }
+                }
+            });
         }
     }
 
@@ -138,11 +172,7 @@ public class Tabs extends AppCompatActivity {
     }
 
     public void createNewLobby(View view) {
-
-        Intent i = new Intent(getApplicationContext(), Lobby.class);
-        i.putExtra("ID", 42);
-        startActivity(i);
-
-
+        ParseUser user = ParseUser.getCurrentUser();
+        tabGlobal.startBlankLobby(user.getObjectId());
     }
 }
