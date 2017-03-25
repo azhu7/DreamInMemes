@@ -8,6 +8,7 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -16,9 +17,10 @@ import java.util.List;
 // TODO: Game_init
 // TODO: Game
 
+// Lobby facilitates game initialization (inviting players) and the actual game play.
 public class Lobby extends AppCompatActivity {
     String name;
-    ArrayList<String> players;  // Player IDs
+    ArrayList<PlayerInfo> players;  // Player IDs
     LinkedList<String> judgeQueue;  // Maintains order of judges
     int roundNum;
     boolean isJudge;
@@ -26,6 +28,11 @@ public class Lobby extends AppCompatActivity {
 
     public enum State {
         GameInit, ChoosePicture, Captioning, ChooseWinner, ShowScores
+    }
+
+    private class PlayerInfo {
+        String id;
+        int points;
     }
 
     @Override
@@ -130,18 +137,20 @@ public class Lobby extends AppCompatActivity {
             public void done(ParseObject object, ParseException e) {
                 if (e == null) {
                     name = object.getString("name");
-                    List<String> temp = object.getList("players");
-                    players = new ArrayList<String>(temp);
-                    temp = object.getList("judgeQueue");
-                    judgeQueue = new LinkedList<String>(temp);
+                    List<PlayerInfo> tempPlayers = object.getList("players");
+                    players = new ArrayList<PlayerInfo>(tempPlayers);
+                    List<String> tempJudgeQueue = object.getList("judgeQueue");
+                    judgeQueue = new LinkedList<String>(tempJudgeQueue);
                     roundNum = object.getInt("roundNum");
+                    isJudge = judgeQueue.peekFirst() == ParseUser.getCurrentUser().getObjectId();
                     state = State.values()[object.getInt("state")];
                     loadLayout();
-                    name = "Changed!";
-                    judgeQueue.add("Another user!");
-                    saveLobby(lobbyId);
+                    //TODO: for saveLobby debug
+                    //name = "Changed!";
+                    //judgeQueue.add("Another user!");
+                    //saveLobby(lobbyId);
                 } else {
-                    Log.d("*****Lobby", "Error: " + e.getMessage());
+                    Log.d("*****Lobby", "Error loading lobby: " + e.getMessage());
                 }
             }
         });
