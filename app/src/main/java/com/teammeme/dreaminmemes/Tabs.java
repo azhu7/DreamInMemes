@@ -199,10 +199,11 @@ public class Tabs extends AppCompatActivity {
 
         // Store blank lobby (containing owner only) to DB and switch activity
         void openNewLobby(String lobbyId) {
-            ArrayList<Lobby.PlayerInfo> players = new ArrayList<>();
+            ArrayList<ParseObject> players = new ArrayList<>();
             LinkedList<String> judgeQueue = new LinkedList<>();
-            Lobby.PlayerInfo ownerInfo = new Lobby.PlayerInfo();
-            ownerInfo.id = lobbyId;
+            ParseObject ownerInfo = ParseObject.create("LobbyUserInfo");
+            ownerInfo.put("userId", ParseUser.getCurrentUser().getObjectId());
+            ownerInfo.put("score", 0);
             players.add(ownerInfo);
             judgeQueue.add(lobbyId);
 

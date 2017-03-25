@@ -20,7 +20,7 @@ import java.util.List;
 // Lobby facilitates game initialization (inviting players) and the actual game play.
 public class Lobby extends AppCompatActivity {
     String name;
-    ArrayList<PlayerInfo> players;  // Player IDs
+    ArrayList<ParseObject> players;  // Player IDs
     LinkedList<String> judgeQueue;  // Maintains order of judges
     int roundNum;
     boolean isJudge;
@@ -28,11 +28,6 @@ public class Lobby extends AppCompatActivity {
 
     public enum State {
         GameInit, ChoosePicture, Captioning, ChooseWinner, ShowScores
-    }
-
-    public static class PlayerInfo {
-        String id;
-        int points = 0;
     }
 
     @Override
@@ -137,8 +132,8 @@ public class Lobby extends AppCompatActivity {
             public void done(ParseObject object, ParseException e) {
                 if (e == null) {
                     name = object.getString("name");
-                    List<PlayerInfo> tempPlayers = object.getList("players");
-                    players = new ArrayList<PlayerInfo>(tempPlayers);
+                    List<ParseObject> tempPlayers = object.getList("players");
+                    players = new ArrayList<ParseObject>(tempPlayers);
                     List<String> tempJudgeQueue = object.getList("judgeQueue");
                     judgeQueue = new LinkedList<String>(tempJudgeQueue);
                     roundNum = object.getInt("roundNum");
