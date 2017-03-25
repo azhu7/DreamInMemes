@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
         Parse.setLogLevel(Parse.LOG_LEVEL_VERBOSE);
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-        installation.put("TempSenderID", "1234567890");
+        installation.put("TempSenderID", "1234567890");  // TODO: Generate unique id?
         installation.saveInBackground();
 
         // Check if user info is cached on disk. If so, go directly to Tabs
