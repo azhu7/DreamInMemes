@@ -35,6 +35,12 @@
             android:onClick="createNewLobby"
             app:srcCompat="@mipmap/ic_launcher" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:onClick="logOut"
+            android:text="Log Out"/>
+
 
     </RelativeLayout>
 
@@ -116,7 +122,6 @@
 
             </LinearLayout>
         </ScrollView>
-
 
     </LinearLayout>
 

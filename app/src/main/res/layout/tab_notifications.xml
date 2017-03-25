@@ -7,19 +7,136 @@
     android:weightSum="1"
     tools:context="com.teammeme.dreaminmemes.Tabs">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".10">
+
+
+        <TextView
+            android:textSize="35dp"
+            android:id="@+id/txtAllRequests"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAlignment="center"
+            android:paddingTop="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true"
+            android:text="All Requests" />
+
+    </RelativeLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".85">
+        android:layout_weight=".375"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/txtViewActiveGames"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingLeft="15dp"
+            android:text="Game Requests"
+            android:textColor="@color/MainTheme"
+            android:textSize="25dp" />
+
+        <View
+            android:id="@+id/viewDividerGameRequests"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/MainTheme" />
+
+        <ScrollView
+            android:id="@+id/ScrollViewGameRequests"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/LinLayoutGameRequests"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerInParent="true"
+                        android:paddingLeft="20dp"
+                        android:text="Username"
+                        android:textSize="25dp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:orientation="horizontal">
+
+                        <ImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                        <ImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".375"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/txtViewFriendRequests"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingLeft="15dp"
+            android:text="Friend Requests"
+            android:textColor="@color/MainTheme"
+            android:textSize="25dp" />
+
+        <View
+            android:id="@+id/viewDividerFriendRequest"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/MainTheme" />
+
+        <ScrollView
+            android:id="@+id/ScrollViewFriendRequests"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/LinLayoutFriendRequests"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
 
 
-
-
-
-
+            </LinearLayout>
+        </ScrollView>
 
     </LinearLayout>
 
