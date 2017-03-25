@@ -163,6 +163,11 @@ public class Tabs extends AppCompatActivity {
             final ParseUser user = ParseUser.getCurrentUser();
             assert user != null : "TabGlobal::populateGames error: user doesn't exist.";
             List<String> lobbies = user.getList("lobbies");
+
+            // Set up views
+            LinearLayout pendingLL = (LinearLayout) findViewById(R.id.LinLayoutPendingGames);
+            LinearLayout activeLL = (LinearLayout) findViewById(R.id.LinLayoutActiveGames);
+
             // Query for all of user's lobbies
             for (String lobbyId : lobbies) {
                 ParseQuery<ParseObject> query = ParseQuery.getQuery("Lobby");
@@ -171,6 +176,7 @@ public class Tabs extends AppCompatActivity {
                     public void done(ParseObject object, ParseException e) {
                         if (e == null) {
                             // PENDING
+
                             if (object.getInt("state") == Lobby.State.GameInit.ordinal()) {
                                 // GENERATE PENDING BOX
                                 Log.d("*****populateGames", "User is in pending lobby: " + object.getObjectId());
@@ -178,6 +184,8 @@ public class Tabs extends AppCompatActivity {
                             // ACTIVE
                             else {
                                 // GENERATE ACTIVE BOX
+
+
                                 List<String> temp = object.getList("judgeQueue");
                                 LinkedList<String> judgeQueue = new LinkedList<String>(temp);
                                 if (judgeQueue.peekFirst() == user.getObjectId()) {
