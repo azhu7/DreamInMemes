@@ -49,15 +49,11 @@ public class Tabs extends AppCompatActivity {
     private class TabGlobal {
         void open() {
 
-            List<Fragment> al = getSupportFragmentManager().getFragments();
-            if (al != null) {
-                for (Fragment frag : al) {
-                    getSupportFragmentManager().beginTransaction().remove(frag).commit();
-                }
-            }
-
             setContentView(R.layout.tab_global);
 
+            populateGames();
+
+            /*
             // load the active game ScrollView
             // will need to use parse to get the number of active games the user is a part of
 
@@ -74,6 +70,7 @@ public class Tabs extends AppCompatActivity {
             int dpAsPixels70 = (int) (70*scale + 0.5f);
             int dpAsPixels50 = (int) (50*scale + 0.5f);
             int dpAsPixels1 = (int) (1*scale + 0.5f);
+
 
             for (int i = 0; i < numActiveGames; i++) {
                 // create the relative layout
@@ -111,6 +108,7 @@ public class Tabs extends AppCompatActivity {
                     }
                 });
             }
+
 
             int numPendingGames = 5;
 
@@ -156,6 +154,7 @@ public class Tabs extends AppCompatActivity {
 
                 });
             }
+            */
         }
 
         // Populate active and pending games by querying user's lobbies
@@ -165,8 +164,8 @@ public class Tabs extends AppCompatActivity {
             List<String> lobbies = user.getList("lobbies");
 
             // Set up views
-            LinearLayout pendingLL = (LinearLayout) findViewById(R.id.LinLayoutPendingGames);
-            LinearLayout activeLL = (LinearLayout) findViewById(R.id.LinLayoutActiveGames);
+            final LinearLayout pendingLL = (LinearLayout) findViewById(R.id.LinLayoutPendingGames);
+            final LinearLayout activeLL = (LinearLayout) findViewById(R.id.LinLayoutActiveGames);
 
             // Query for all of user's lobbies
             for (String lobbyId : lobbies) {
@@ -178,13 +177,15 @@ public class Tabs extends AppCompatActivity {
                             // PENDING
 
                             if (object.getInt("state") == Lobby.State.GameInit.ordinal()) {
-                                // GENERATE PENDING BOX
+                                createPendingRelativeLayout(pendingLL, "Game Name", 3, 24);
+
+
                                 Log.d("*****populateGames", "User is in pending lobby: " + object.getObjectId());
                             }
                             // ACTIVE
                             else {
                                 // GENERATE ACTIVE BOX
-
+                                createActiveRelativeLayout(activeLL, "Game Name", "Directions", 24);
 
                                 List<String> temp = object.getList("judgeQueue");
                                 LinkedList<String> judgeQueue = new LinkedList<String>(temp);
@@ -411,8 +412,99 @@ public class Tabs extends AppCompatActivity {
         l.addView(rejectButton, rejectParams);
 
         r.addView(l, rParams);
+    }
+
+    private void createActiveRelativeLayout(LinearLayout l, String gameName, String directions, int timeLeft) {
+        float scale = getResources().getDisplayMetrics().density;
+        int dpAsPixels20 = (int) (20*scale + 0.5f);
+        int dpAsPixels15 = (int) (15*scale + 0.5f);
+        int dpAsPixels70 = (int) (70*scale + 0.5f);
+        int dpAsPixels50 = (int) (50*scale + 0.5f);
+        int dpAsPixels1 = (int) (1*scale + 0.5f);
+
+        // create the relative layout
+        RelativeLayout r = new RelativeLayout(getApplicationContext());
+        r.setId(View.generateViewId());
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpAsPixels70);
+
+        createNestedLinearLayoutWithTextViews(r, gameName, directions);
+
+        // create the Directions text view
+        TextView tv3 = new TextView(getApplicationContext());
+        RelativeLayout.LayoutParams timeParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT);
+        timeParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        timeParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        tv3.setText(timeLeft + " Hours Left");
+        tv3.setPadding(0,0, dpAsPixels20, 0);
+        tv3.setTextSize(15);
+        tv3.setId(View.generateViewId());
+
+        // create the divider
+        createDivider(r);
+
+        // add the views
+        r.addView(tv3, timeParams);
+        r.setClickable(true);
+        r.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v){
+                Toast.makeText(getApplicationContext(), "Hello from " + v.getId(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        l.addView(r, params);
+    }
+
+    private void createPendingRelativeLayout(LinearLayout l, String gameName, int playersPending, int timeLeft) {
+
+        float scale = getResources().getDisplayMetrics().density;
+        int dpAsPixels20 = (int) (20*scale + 0.5f);
+        int dpAsPixels15 = (int) (15*scale + 0.5f);
+        int dpAsPixels70 = (int) (70*scale + 0.5f);
+        int dpAsPixels50 = (int) (50*scale + 0.5f);
+        int dpAsPixels1 = (int) (1*scale + 0.5f);
+
+        RelativeLayout r = new RelativeLayout(getApplicationContext());
+        r.setId(View.generateViewId());
+        LinearLayout.LayoutParams rParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+                dpAsPixels50);
+
+        // Text view with game name
+        TextView gameNameText = new TextView(getApplicationContext());
+        RelativeLayout.LayoutParams gameNameParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT);
+        gameNameParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        gameNameText.setText(gameName);
+        gameNameText.setTextSize(20);
+        gameNameText.setId(View.generateViewId());
+        gameNameText.setPadding(dpAsPixels20, 0, 0, 0);
+
+        // Text view with players pending
+        TextView pendingPlayers = new TextView(getApplicationContext());
+        RelativeLayout.LayoutParams pendingPlayersParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT);
+        pendingPlayersParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        pendingPlayersParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        pendingPlayers.setText(playersPending + " Pending Players");
+        pendingPlayers.setPadding(0, 0, dpAsPixels20, 0);
+        pendingPlayers.setTextSize(15);
 
 
+        r.addView(gameNameText, gameNameParams);
+        r.addView(pendingPlayers, pendingPlayersParams);
 
+        r.setClickable(true);
+        r.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v){
+                Toast.makeText(getApplicationContext(), "Hello from " + v.getId(), Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+        l.addView(r, rParams);
     }
 }
