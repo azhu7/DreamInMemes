@@ -25,11 +25,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-// TODO: Game_init
 // TODO: Game
 
 // Lobby facilitates game initialization (inviting players) and the actual game play.
 public class Lobby extends AppCompatActivity {
+    String lobbyId;  // this objectId
     String name;
     ArrayList<ParseObject> players;  // Player IDs
     LinkedList<String> judgeQueue;  // Maintains order of judges
@@ -45,9 +45,8 @@ public class Lobby extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Select which layout to open
-        String lobbyId = getIntent().getStringExtra("lobbyId");
+        lobbyId = getIntent().getStringExtra("lobbyId");
         loadLobby(lobbyId);
-        //boolean isJudge = false;
         //run();
     }
 
@@ -114,6 +113,14 @@ public class Lobby extends AppCompatActivity {
         }
     }
 
+    // Instantiate game in Lobby, incorporating information from Create game page.
+    public void startGame(View v) {
+        EditText et_title = (EditText) findViewById(R.id.et_title);
+        name = et_title.getText().toString();
+        state = State.ChoosePicture;
+        run();
+    }
+
     // Store lobby to DB. Requires that specified lobby exists in DB already.
     private void saveLobby(final String lobbyId) {
         // Write to DB: query object by objectId and alter contents
@@ -136,17 +143,18 @@ public class Lobby extends AppCompatActivity {
     }
 
     // Load specified lobby from DB
-    void loadLobby(final String lobbyId) {
+    void loadLobby(final String lobbyId_) {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Lobby");
         query.getInBackground(lobbyId, new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
                 if (e == null) {
+                    lobbyId = lobbyId_;
                     name = object.getString("name");
                     List<ParseObject> tempPlayers = object.getList("players");
-                    players = new ArrayList<ParseObject>(tempPlayers);
+                    players = new ArrayList<>(tempPlayers);
                     List<String> tempJudgeQueue = object.getList("judgeQueue");
-                    judgeQueue = new LinkedList<String>(tempJudgeQueue);
+                    judgeQueue = new LinkedList<>(tempJudgeQueue);
                     roundNum = object.getInt("roundNum");
                     isJudge = judgeQueue.peekFirst().equals(ParseUser.getCurrentUser().getObjectId());
                     state = State.values()[object.getInt("state")];
@@ -162,7 +170,47 @@ public class Lobby extends AppCompatActivity {
         });
     }
 
+    // Delete specified lobby from Parse Cloud. Also delete any mentions of the lobby's objectId.
+    public void closeLobby() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Lobby");
+        query.getInBackground(lobbyId, new GetCallback<ParseObject>() {
+            @Override
+            public void done(final ParseObject object, ParseException e) {
+                if (e == null) {
+                    List<ParseObject> playerInfos = object.getList("players");
+                    for (ParseObject userInfo : playerInfos) {
+                        userInfo.deleteInBackground();
+                    }
+                    List<String> players = object.getList("judgeList");
+                    // Remove lobbyId from each user
+                    for (final String userId : players) {
+                        ParseQuery<ParseUser> query = ParseUser.getQuery();
+                        query.whereEqualTo("objectId", userId);
+                        // Query for user with this userId
+                        query.findInBackground(new FindCallback<ParseUser>() {
+                            public void done(List<ParseUser> objects, ParseException e) {
+                                if (e == null && objects.size() == 1) {
+                                    // The query was successful.
+                                    List<String> lobbies = objects.get(0).getList("lobbies");
+                                    lobbies.remove(object.getObjectId());  // Remove this lobby
+                                } else {
+                                    Log.d("*****Lobby", "closeLobby failed to find user with objectId: " + userId);
+                                }
+                            }
+                        });
+                    }
+                    object.deleteInBackground();
+                    finish();
+                } else {
+                    Log.d("*****Lobby", "Error deleting lobby: " + e.getMessage());
+                }
+            }
+        });
+    }
+
+    // Invite a user by username.
     public void inviteUser(View v) {
+        // TODO: Make sure users can't add same person multiple times
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
         alert.setTitle("Title");

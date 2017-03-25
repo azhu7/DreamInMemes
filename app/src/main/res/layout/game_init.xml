@@ -14,21 +14,23 @@
         android:layout_weight="0.13">
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/b_home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
             android:layout_marginStart="22dp"
-            android:text="Home" />
+            android:onClick="goToGlobal"
+            android:text="Home"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/b_end_game"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/button2"
+            android:layout_alignTop="@+id/b_home"
             android:layout_marginEnd="19dp"
+            android:onClick="closeLobby"
             android:text="End Game" />
 
     </RelativeLayout>
@@ -48,7 +50,7 @@
             android:layout_centerHorizontal="true" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/et_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -139,12 +141,14 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.12">
-    <Button
-        android:id="@+id/button5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start Game"
-        android:layout_centerHorizontal="true" />
+
+        <Button
+            android:id="@+id/b_start_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:onClick="startGame"
+            android:text="Start Game" />
     </RelativeLayout>
 
 </LinearLayout>
