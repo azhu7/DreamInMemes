@@ -182,6 +182,11 @@ public class Lobby extends AppCompatActivity {
                         userInfo.deleteInBackground();
                     }
                     List<String> players = object.getList("judgeList");
+                    if (players == null) {
+                        object.deleteInBackground();
+                        finish();
+                        return;
+                    }
                     // Remove lobbyId from each user
                     for (final String userId : players) {
                         ParseQuery<ParseUser> query = ParseUser.getQuery();
