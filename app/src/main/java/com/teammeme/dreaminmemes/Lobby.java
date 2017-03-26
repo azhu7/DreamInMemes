@@ -171,7 +171,7 @@ public class Lobby extends AppCompatActivity {
     }
 
     // Delete specified lobby from Parse Cloud. Also delete any mentions of the lobby's objectId.
-    public void closeLobby(View v) {
+    public void deleteLobby(View v) {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Lobby");
         query.getInBackground(lobbyId, new GetCallback<ParseObject>() {
             @Override
@@ -184,7 +184,6 @@ public class Lobby extends AppCompatActivity {
                     List<String> players = object.getList("judgeQueue");
                     if (players == null) {
                         object.deleteInBackground();
-                        finish();
                         return;
                     }
                     // Remove lobbyId from each user
@@ -202,7 +201,7 @@ public class Lobby extends AppCompatActivity {
                                     user.put("lobbies", lobbies);
                                     user.saveInBackground();
                                 } else {
-                                    Log.d("*****Lobby", "closeLobby failed to find user with objectId: " + userId);
+                                    Log.d("*****Lobby", "deleteLobby failed to find user with objectId: " + userId);
                                 }
                             }
                         });
@@ -216,13 +215,17 @@ public class Lobby extends AppCompatActivity {
         });
     }
 
+    public void leaveLobby(View v) {
+        finish();
+    }
+
     // Invite a user by username.
     public void inviteUser(View v) {
         // TODO: Make sure users can't add same person multiple times
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-        alert.setTitle("Title");
-        alert.setMessage("Message");
+        alert.setTitle("Add a friend:");
+        alert.setMessage("Enter a friend's username to invite them to your lobby!");
 
         // Set an EditText view to get user input
         final EditText input = new EditText(this);
@@ -245,7 +248,6 @@ public class Lobby extends AppCompatActivity {
                             createFriendInviteListItem(LL, username);
                         } else {
                             Toast.makeText(getApplicationContext(), "Could not find user!", Toast.LENGTH_SHORT).show();
-                            return;
                         }
                     }
                 });

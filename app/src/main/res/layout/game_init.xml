@@ -14,23 +14,23 @@
         android:layout_weight="0.13">
 
         <Button
-            android:id="@+id/b_home"
+            android:id="@+id/back_to_home_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="22dp"
-            android:onClick="goToGlobal"
-            android:text="Home"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_alignParentStart="true" />
+            android:layout_marginStart="22dp"
+            android:onClick="leaveLobby"
+            android:text="Home" />
 
         <Button
             android:id="@+id/b_end_game"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/b_home"
+            android:layout_alignTop="@+id/back_to_home_button"
             android:layout_marginEnd="19dp"
-            android:onClick="closeLobby"
+            android:onClick="deleteLobby"
             android:text="End Game" />
 
     </RelativeLayout>

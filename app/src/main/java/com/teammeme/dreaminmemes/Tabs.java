@@ -2,14 +2,10 @@ package com.teammeme.dreaminmemes;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Layout;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -17,14 +13,12 @@ import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
-import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -43,6 +37,14 @@ public class Tabs extends AppCompatActivity {
         tabUser = new TabUser();
 
         // Start with Global tab
+        Log.d("*****onCreate()", "opening Global");
+        tabGlobal.open();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("******onResume()", "opening Global");
         tabGlobal.open();
     }
 
@@ -55,7 +57,10 @@ public class Tabs extends AppCompatActivity {
         // Populate active and pending games by querying user's lobbies
         void populateGames() {
             final ParseUser user = ParseUser.getCurrentUser();
-            assert user != null : "TabGlobal::populateGames error: user doesn't exist.";
+            if (user == null) {
+                Toast.makeText(getApplicationContext(), "populateGames null user pointer??", Toast.LENGTH_SHORT).show();
+                return;
+            }
             List<String> lobbies = user.getList("lobbies");
 
             // Set up views
@@ -98,10 +103,11 @@ public class Tabs extends AppCompatActivity {
                                     Log.d("*****populateGames", "User is not judge of " + object.getObjectId());
                                 }
                             }
+                        } else if (object == null) {
+                            return;  // Half error
                         } else {
                             // ERROR
                             Log.d("*****populateGames", "Error: could not pull up user's lobby: " + object.getObjectId());
-                            finish();
                         }
                     }
                 });
@@ -139,7 +145,7 @@ public class Tabs extends AppCompatActivity {
                                 Intent i = new Intent(getApplicationContext(), Lobby.class);
                                 i.putExtra("lobbyId", dataObject.getObjectId());
                                 startActivity(i);
-                                populateGames();
+                                Log.d("*****Tabs", "Starting openNewLobby");
                             }
                         });
                     } else {
@@ -155,7 +161,6 @@ public class Tabs extends AppCompatActivity {
             Intent i = new Intent(getApplicationContext(), Lobby.class);
             i.putExtra("lobbyId", lobbyId);
             startActivity(i);
-            populateGames();
         }
     }
 
@@ -173,13 +178,6 @@ public class Tabs extends AppCompatActivity {
 
     private class TabNotifications {
         void open() {
-            List<Fragment> al = getSupportFragmentManager().getFragments();
-            if (al != null) {
-                for (Fragment frag : al) {
-                    getSupportFragmentManager().beginTransaction().remove(frag).commit();
-                }
-            }
-
             setContentView(R.layout.tab_notifications);
 
             float scale = getResources().getDisplayMetrics().density;
@@ -192,8 +190,6 @@ public class Tabs extends AppCompatActivity {
             int numGameRequests = 5;
 
             LinearLayout gameRequestsLayout = (LinearLayout)findViewById(R.id.LinLayoutGameRequests);
-
-
 
             for (int i = 0; i < numGameRequests; i++) {
                 // create the relative layout
