@@ -97,7 +97,7 @@ public class Lobby extends AppCompatActivity {
                     final TextView tv_captioning_others = (TextView)findViewById(R.id.tv_captioning_others);
                     String currentJudgeId = judgeQueue.getFirst();
                     ParseQuery<ParseUser> query = ParseUser.getQuery();
-                    query.whereEqualTo("userId", currentJudgeId);
+                    query.whereEqualTo("objectId", currentJudgeId);
                     query.findInBackground(new FindCallback<ParseUser>() {
                         public void done(List<ParseUser> objects, ParseException e) {
                             if (e == null) {
@@ -439,7 +439,7 @@ public class Lobby extends AppCompatActivity {
         for (int i = 0; i < players.size(); ++i) {
             String currentUserId = ParseUser.getCurrentUser().getObjectId();
             // Find current player
-            if (players.get(i).getString("userId").equals(currentUserId)) {
+            if (players.get(i).getString("objectId").equals(currentUserId)) {
                 if (!players.get(i).getBoolean("submitted")) {
                     //TODO: submit File to Parse
                     //byte[] data;  //TODO: = some ImageView image?
