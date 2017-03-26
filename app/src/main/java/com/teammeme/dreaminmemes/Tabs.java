@@ -134,6 +134,8 @@ public class Tabs extends AppCompatActivity {
             dataObject.put("judgeQueue", judgeQueue);
             dataObject.put("roundNum", 1);
             dataObject.put("state", Lobby.State.GameInit.ordinal());
+            dataObject.put("memeFilename", "");
+            dataObject.put("numSubmitted", 0);
 
             dataObject.saveInBackground(new SaveCallback() {
                 public void done(ParseException e) {

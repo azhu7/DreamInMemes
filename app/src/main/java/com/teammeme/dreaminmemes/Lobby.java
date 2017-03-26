@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -39,7 +40,7 @@ public class Lobby extends AppCompatActivity {
     State state;
 
     public enum State {
-        GameInit, ChoosePicture, Captioning, ChooseWinner, ShowScores
+        GameInit, ChoosePicture, Captioning, ChooseWinner, ShowResults
     }
 
     @Override
@@ -75,8 +76,9 @@ public class Lobby extends AppCompatActivity {
                     break;
                 case ChooseWinner:
                     //setContentView(R.layout.choose_winner_judge);
+                    fetchMemes();
                     break;
-                case ShowScores:
+                case ShowResults:
                     //setContentView(R.layout.show_scores);
                     break;
             }
@@ -109,7 +111,7 @@ public class Lobby extends AppCompatActivity {
                 case ChooseWinner:
                     //setContentView(R.layout.choose_winner_others);
                     break;
-                case ShowScores:
+                case ShowResults:
                     //setContentView(R.layout.show_scores);
                     break;
             }
@@ -128,7 +130,7 @@ public class Lobby extends AppCompatActivity {
                     // Idle. All players submit ->
                 case ChooseWinner:
                     // Swipe. Select winner ->
-                case ShowScores:
+                case ShowResults:
                     // Show scores. Next round starts in 1 minute ->
             }
         } else {
@@ -141,19 +143,20 @@ public class Lobby extends AppCompatActivity {
                     // Caption. Submit. All players submit ->
                 case ChooseWinner:
                     // Idle. Judge select winner ->
-                case ShowScores:
+                case ShowResults:
                     // Show scores. Next round starts in 1 minute ->
             }
         }
     }
 
-    // Instantiate game in Lobby, incorporating information from Create game page.
+    // Owner instantiates game in Lobby, incorporating information from Create game page.
     public void startGame(View v) {
         EditText et_title = (EditText) findViewById(R.id.et_title);
         name = et_title.getText().toString();
-        if (name == null)
-            return;  // TODO ERROR
-
+        if (name.equals("")) {
+            Toast.makeText(getApplicationContext(), "Must name the lobby!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         // Delete any lingering lobby requests
         ParseQuery<ParseObject> query = ParseQuery.getQuery("userRequest");
         query.whereEqualTo("lobbyId", lobbyId);
@@ -168,23 +171,88 @@ public class Lobby extends AppCompatActivity {
                 }
             }
         });
+
         state = State.ChoosePicture;
-        saveLobby();
-        loadLayout();
+
+        // Query the lobby
+        ParseQuery<ParseObject> dataObject = ParseQuery.getQuery("Lobby");
+        dataObject.getInBackground(lobbyId, new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    // Write certain values
+                    object.put("name", name);
+                    object.put("roundNum", roundNum);
+                    object.put("state", state.ordinal());
+
+                    // Read values changed by other players joining
+                    List<ParseObject> tempPlayers = object.getList("players");
+                    players = new ArrayList<>(tempPlayers);
+                    List<String> tempJudgeQueue = object.getList("judgeQueue");
+                    judgeQueue = new LinkedList<>(tempJudgeQueue);
+
+                    object.saveInBackground();
+                    loadLayout();
+                } else {
+                    Log.d("*****Lobby", "Error saving lobby: " + e.getMessage());
+                }
+            }
+        });
     }
 
     // Judge submits picture and players begin to caption.
     public void startCaptioning(View v) {
-        ImageView iv_selected = (ImageView)findViewById(R.id.iv_selected);
+        // Check that judge actually chose a picture
+        final ImageView iv_selected = (ImageView)findViewById(R.id.iv_selected);
         if (iv_selected.getDrawable() == null) {
             Toast.makeText(getApplicationContext(), "Must select a picture for captioning!", Toast.LENGTH_SHORT).show();
             return;
         }
+
         state = State.Captioning;
-        saveLobby();
-        loadLayout();
+
+        // Query the lobby
+        ParseQuery<ParseObject> dataObject = ParseQuery.getQuery("Lobby");
+        dataObject.getInBackground(lobbyId, new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    // Write certain values, including meme selected
+                    object.put("state", state.ordinal());
+                    object.put("memeFilename", iv_selected.getTag().toString());
+                    object.saveInBackground();
+                    loadLayout();
+                } else {
+                    Log.d("*****Lobby", "Error startCaptioning: " + e.getMessage());
+                }
+            }
+        });
     }
 
+    // Players done captioning, judge updates state and gets pictures
+    public void startWinnerSelection() {
+        state = State.ChooseWinner;
+        // Query the lobby
+        ParseQuery<ParseObject> dataObject = ParseQuery.getQuery("Lobby");
+        dataObject.getInBackground(lobbyId, new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    // Write certain values
+                    object.put("state", state.ordinal());
+                    object.saveInBackground();
+                    loadLayout();
+                } else {
+                    Log.d("*****Lobby", "Error saving lobby: " + e.getMessage());
+                }
+            }
+        });
+    }
+
+    // Judge chose best picture. Now everyone sees same View - winner and leaderboard
+    public void startShowResults() {
+
+    }
 
     // Store lobby to DB. Requires that specified lobby exists in DB already.
     private void saveLobby() {
@@ -202,16 +270,16 @@ public class Lobby extends AppCompatActivity {
                     dataObject.getInBackground(lobbyId, new GetCallback<ParseObject>() {
                         @Override
                         public void done(ParseObject object, ParseException e) {
-                        if (e == null) {
-                            object.put("name", name);
-                            object.put("players", players);
-                            object.put("judgeQueue", judgeQueue);
-                            object.put("roundNum", roundNum);
-                            object.put("state", state.ordinal());
-                            object.saveInBackground();
-                        } else {
-                            Log.d("*****Lobby", "Error saving lobby: " + e.getMessage());
-                        }
+                            if (e == null) {
+                                object.put("name", name);
+                                object.put("players", players);
+                                object.put("judgeQueue", judgeQueue);
+                                object.put("roundNum", roundNum);
+                                object.put("state", state.ordinal());
+                                object.saveInBackground();
+                            } else {
+                                Log.d("*****Lobby", "Error saving lobby: " + e.getMessage());
+                            }
                         }
                     });
                 } catch (Exception e) {
@@ -367,13 +435,33 @@ public class Lobby extends AppCompatActivity {
 
     // Non-judge player submits captioned meme. Note: each player may only submit one meme.
     public void submitMeme(View v) {
+        // Iterate over playerInfos
         for (int i = 0; i < players.size(); ++i) {
             String currentUserId = ParseUser.getCurrentUser().getObjectId();
             // Find current player
             if (players.get(i).getString("userId").equals(currentUserId)) {
                 if (!players.get(i).getBoolean("submitted")) {
                     //TODO: submit File to Parse
+                    //byte[] data;  //TODO: = some ImageView image?
+                    //ParseFile captionedMeme = new ParseFile(currentUserId, data);
+                    //captionedMeme.saveInBackground();
                     players.get(i).put("submitted", true);
+                    // Query lobby and increment the number of submitted entries
+                    ParseQuery<ParseObject> dataObject = ParseQuery.getQuery("Lobby");
+                    dataObject.getInBackground(lobbyId, new GetCallback<ParseObject>() {
+                        @Override
+                        public void done(ParseObject object, ParseException e) {
+                            if (e == null) {
+                                object.increment("numSubmitted");
+                                // Everyone submitted. Time for leader to choose winner.
+                                if (object.getInt("numSubmitted") == players.size() - 1) {
+                                    startWinnerSelection();
+                                }
+                            } else {
+                                Log.d("*****Lobby", "Error submitting meme: " + e.getMessage());
+                            }
+                        }
+                    });
                 } else {
                     Toast.makeText(getApplicationContext(), "Can only submit one meme per round!", Toast.LENGTH_SHORT).show();
                 }
@@ -381,6 +469,19 @@ public class Lobby extends AppCompatActivity {
         }
         throw new RuntimeException("User not part of this Lobby.");
     }
+
+    private void fetchMemes() {
+        // Get submitted memes
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("ParseFile");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                
+            }
+        });
+    }
+
+
 
     private void createFriendInviteListItem(LinearLayout LL, String username) {
 
@@ -429,6 +530,7 @@ public class Lobby extends AppCompatActivity {
                 iv_selected.setImageResource(R.drawable.thinkaboutit);
             else if (memePath.equals("willywonka.png"))
                 iv_selected.setImageResource(R.drawable.willywonka);
+            iv_selected.setTag(memePath);
         }
     }
 
