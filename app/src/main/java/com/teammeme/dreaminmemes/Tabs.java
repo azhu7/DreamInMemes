@@ -302,7 +302,20 @@ public class Tabs extends AppCompatActivity {
         LinearLayout.LayoutParams rejectParams = new LinearLayout.LayoutParams(dpAsPixels50,
                 dpAsPixels50);
 
-        // set on click listeners for buttons
+        // set onClick listeners for buttons
+        acceptButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Remove
+                // Add to lobby
+            }
+        });
+        rejectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Remove
+            }
+        });
 
         LL.addView(acceptButton, acceptParams);
         LL.addView(rejectButton, rejectParams);

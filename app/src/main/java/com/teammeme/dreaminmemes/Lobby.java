@@ -3,6 +3,7 @@ package com.teammeme.dreaminmemes;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -60,6 +61,8 @@ public class Lobby extends AppCompatActivity {
                     break;
                 case ChoosePicture:
                     setContentView(R.layout.choose_picture_judge);
+                    TextView tv_roundNum = (TextView)findViewById(R.id.tv_roundNum);
+                    tv_roundNum.setText("Round " + roundNum + "/" + players.size());
                     break;
                 case Captioning:
                     setContentView(R.layout.captioning_judge);
@@ -188,10 +191,24 @@ public class Lobby extends AppCompatActivity {
             @Override
             public void done(final ParseObject object, ParseException e) {
                 if (e == null) {
+                    // Remove userInfos
                     List<ParseObject> playerInfos = object.getList("players");
                     for (ParseObject userInfo : playerInfos) {
                         userInfo.deleteInBackground();
                     }
+                    // Remove userRequests
+                    ParseQuery<ParseObject> query1 = ParseQuery.getQuery("userRequest");
+                    query1.whereEqualTo("lobbyId", lobbyId);
+                    query1.findInBackground(new FindCallback<ParseObject>() {
+                        public void done(List<ParseObject> userRequests, ParseException e) {
+                            if (e == null && userRequests.size() == 1) {
+                                userRequests.get(0).deleteInBackground();
+                            } else {
+                                Log.d("*****deleteLobby", "Error: " + e.getMessage());
+                            }
+                        }
+                    });
+
                     List<String> players = object.getList("judgeQueue");
                     if (players == null) {
                         object.deleteInBackground();
@@ -199,10 +216,10 @@ public class Lobby extends AppCompatActivity {
                     }
                     // Remove lobbyId from each user
                     for (final String userId : players) {
-                        ParseQuery<ParseUser> query = ParseUser.getQuery();
-                        query.whereEqualTo("objectId", userId);
+                        ParseQuery<ParseUser> query2 = ParseUser.getQuery();
+                        query2.whereEqualTo("objectId", userId);
                         // Query for user with this userId
-                        query.findInBackground(new FindCallback<ParseUser>() {
+                        query2.findInBackground(new FindCallback<ParseUser>() {
                             public void done(List<ParseUser> users, ParseException e) {
                                 if (e == null && users.size() == 1) {
                                     // The query was successful.
@@ -257,6 +274,10 @@ public class Lobby extends AppCompatActivity {
                             // Make the list item
                             LinearLayout LL = (LinearLayout)findViewById(R.id.LinLayoutFriendInvite);
                             createFriendInviteListItem(LL, username);
+                            ParseObject userRequest = ParseObject.create("userRequest");
+                            userRequest.put("userId", objects.get(0).getObjectId());
+                            userRequest.put("lobbyId", lobbyId);
+                            userRequest.saveInBackground();
                         } else {
                             Toast.makeText(getApplicationContext(), "Could not find user!", Toast.LENGTH_SHORT).show();
                         }
@@ -317,6 +338,15 @@ public class Lobby extends AppCompatActivity {
         if (requestCode == 42 && resultCode == RESULT_OK && data != null) {
             String memePath = data.getStringExtra("path");
             Toast.makeText(getApplicationContext(), memePath, Toast.LENGTH_SHORT).show();
+            ImageView iv_selected = (ImageView)findViewById(R.id.iv_selected);
+            if (memePath.equals("badluckbrian.png"))
+                iv_selected.setImageResource(R.drawable.badluckbrian);
+            else if (memePath.equals("oldharold.png"))
+                iv_selected.setImageResource(R.drawable.oldharold);
+            else if (memePath.equals("thinkaboutit.png"))
+                iv_selected.setImageResource(R.drawable.thinkaboutit);
+            else if (memePath.equals("willywonka.png"))
+                iv_selected.setImageResource(R.drawable.willywonka);
         }
     }
 

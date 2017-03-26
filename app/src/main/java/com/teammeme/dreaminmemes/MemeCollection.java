@@ -22,7 +22,6 @@ public class MemeCollection extends AppCompatActivity {
     public void returnMemePath(View v) {
         ImageView iv = (ImageView) v;
         Intent output = new Intent();
-        //iv.setTag("hello");
         String tag = iv.getTag().toString();
         output.putExtra("path", tag);
         setResult(RESULT_OK, output);

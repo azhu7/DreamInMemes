@@ -17,8 +17,8 @@
             android:layout_height="match_parent"
             android:layout_weight=".5"
             android:onClick="returnMemePath"
-            app:srcCompat="@mipmap/ic_launcher_round"
-            android:tag="thinkAboutIt.png" />
+            app:srcCompat="@drawable/thinkaboutit"
+            android:tag="thinkaboutit.png" />
 
         <ImageView
             android:id="@+id/imageView9"
@@ -26,8 +26,8 @@
             android:layout_height="match_parent"
             android:layout_weight=".5"
             android:onClick="returnMemePath"
-            app:srcCompat="@mipmap/ic_launcher_round"
-            android:tag="willwonka.png" />
+            app:srcCompat="@drawable/willywonka"
+            android:tag="willywonka.png" />
     </TableRow>
 
     <TableRow
@@ -42,7 +42,7 @@
             android:layout_height="match_parent"
             android:layout_weight=".5"
             android:onClick="returnMemePath"
-            app:srcCompat="@mipmap/ic_launcher_round"
+            app:srcCompat="@drawable/oldharold"
             android:tag="oldharold.png" />
 
         <ImageView
@@ -51,7 +51,7 @@
             android:layout_height="match_parent"
             android:layout_weight=".5"
             android:onClick="returnMemePath"
-            app:srcCompat="@mipmap/ic_launcher_round"
+            app:srcCompat="@drawable/badluckbrian"
             android:tag="badluckbrian.png" />
 
     </TableRow>
