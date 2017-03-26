@@ -36,20 +36,104 @@
 
     </RelativeLayout>
 
-
-    <ImageView
-        android:layout_width="wrap_content"
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".55"/>
+        android:layout_weight="0.9">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight=".1"
-        android:text="Username has won the round!"
-        android:textSize="25dp"
-        android:layout_gravity="center"
-        />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/scrollImgView"
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_height="300dp"
+                    />
+
+                <TextView
+                    android:id="@+id/userWin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Username has won the round!"
+                    android:textSize="25dp"
+                    android:paddingTop="10dp"
+                    android:layout_below="@+id/scrollImgView"
+                    android:layout_centerHorizontal="true"/>
+
+                <TextView
+                    android:id="@+id/round"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Round 1 of 2"
+                    android:textSize="20dp"
+                    android:paddingTop="10dp"
+                    android:layout_below="@+id/userWin"
+                    android:layout_centerHorizontal="true"/>
+
+                <TextView
+                    android:id="@+id/nextJudge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Next Judge: Dillon"
+                    android:textSize="20dp"
+                    android:layout_below="@+id/round"
+                    android:paddingTop="10dp"
+                    android:layout_centerHorizontal="true"/>
+
+                <TextView
+                    android:id="@+id/waitingfor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Waiting for Dillon to Choose Picture"
+                    android:textSize="20dp"
+                    android:layout_below="@+id/nextJudge"
+                    android:paddingTop="10dp"
+                    android:layout_centerHorizontal="true"/>
+            </RelativeLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/DividerColor"/>
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="30dp"
+                    android:paddingTop="30dp"/>
+
+
+
+
+            </RelativeLayout>
+
+
+
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
 
 
 
