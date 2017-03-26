@@ -16,14 +16,13 @@ public class MemeCollection extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.meme_collection);
-
     }
 
     public void returnMemePath(View v) {
         ImageView iv = (ImageView) v;
         Intent output = new Intent();
+        //iv.setTag("hello");
         String tag = iv.getTag().toString();
         output.putExtra("path", tag);
         setResult(RESULT_OK, output);
