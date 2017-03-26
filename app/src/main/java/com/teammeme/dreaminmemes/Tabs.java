@@ -297,10 +297,12 @@ public class Tabs extends AppCompatActivity {
         ImageButton acceptButton = new ImageButton(getApplicationContext());
         LinearLayout.LayoutParams acceptParams = new LinearLayout.LayoutParams(dpAsPixels50,
                 dpAsPixels50);
+        acceptButton.setBackgroundColor(Color.parseColor("#00FF00"));
 
         ImageButton rejectButton = new ImageButton(getApplicationContext());
         LinearLayout.LayoutParams rejectParams = new LinearLayout.LayoutParams(dpAsPixels50,
                 dpAsPixels50);
+        rejectButton.setBackgroundColor(Color.parseColor("#FF0000"));
 
         // set onClick listeners for buttons
         acceptButton.setOnClickListener(new View.OnClickListener() {
