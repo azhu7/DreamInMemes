@@ -11,7 +11,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.13">
+        android:layout_weight="0.10">
 
         <Button
             android:id="@+id/back_to_home_button"
@@ -19,19 +19,95 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="22dp"
+            android:layout_marginStart="5dp"
             android:onClick="leaveLobby"
             android:text="Home" />
 
-        <Button
-            android:id="@+id/b_end_game"
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".1" >
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/back_to_home_button"
-            android:layout_marginEnd="19dp"
-            android:onClick="deleteLobby"
-            android:text="End Game" />
+            android:layout_centerInParent="true"
+            android:textSize="25dp"
+            android:text="Username (Judge)"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".075"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#000000"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:textColor="#FFFFFF"
+            android:hint="Edit Top Caption"
+            android:textColorHint="#FFFFFF"
+            android:layout_centerInParent="true"/>
+
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight=".55"/>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".075"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#000000"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:textColor="#FFFFFF"
+            android:hint="Edit Bottom Caption"
+            android:textColorHint="#FFFFFF"
+            android:layout_centerInParent="true"/>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".1">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Submit Meme!"
+            android:background="@color/MainTheme"
+            />
+
 
     </RelativeLayout>
 
@@ -39,4 +115,7 @@
 
 
 
+
 </LinearLayout>
+
+
