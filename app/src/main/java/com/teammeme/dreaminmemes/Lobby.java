@@ -90,7 +90,10 @@ public class Lobby extends AppCompatActivity {
                     txtGameName.setText(name);
                     break;
                 case ChoosePicture:
-                    //setContentView(R.layout.choose_picture_others);
+                    setContentView(R.layout.choose_picture_others);
+                    final TextView tv_choose_pic_others = (TextView)findViewById(R.id.tv_choose_pic_others);
+                    String msg = "Waiting for judge to choose picture";
+                    tv_choose_pic_others.setText(msg);
                     break;
                 case Captioning:
                     setContentView(R.layout.captioning_others);
@@ -101,7 +104,8 @@ public class Lobby extends AppCompatActivity {
                     query.findInBackground(new FindCallback<ParseUser>() {
                         public void done(List<ParseUser> objects, ParseException e) {
                             if (e == null) {
-                                tv_captioning_others.setText(objects.get(0).getString("username"));
+                                String output = objects.get(0).getString("username") + " is the judge.";
+                                tv_captioning_others.setText(output);
                             } else {
                                 Log.d("*****CaptioningOthers", "Error: " + e.getMessage());
                             }
