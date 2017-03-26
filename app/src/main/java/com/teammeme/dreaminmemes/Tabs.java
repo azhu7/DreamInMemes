@@ -123,6 +123,7 @@ public class Tabs extends AppCompatActivity {
             ParseObject ownerInfo = ParseObject.create("lobbyUserInfo");
             ownerInfo.put("userId", ParseUser.getCurrentUser().getObjectId());
             ownerInfo.put("score", 0);
+            ownerInfo.put("submitted", false);
             players.add(ownerInfo);
             judgeQueue.add(lobbyId);
 
@@ -352,6 +353,7 @@ public class Tabs extends AppCompatActivity {
                             ParseObject lobbyUserInfo = ParseObject.create("lobbyUserInfo");
                             lobbyUserInfo.put("userId", ParseUser.getCurrentUser().getObjectId());
                             lobbyUserInfo.put("score", 0);
+                            lobbyUserInfo.put("submitted", false);
                             tempPlayers.add(lobbyUserInfo);
                             List<String> tempJudgeQueue = object.getList("judgeQueue");
                             tempJudgeQueue.add(lobbyId);

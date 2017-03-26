@@ -28,18 +28,14 @@
             android:id="@+id/tv_roundNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/button"
-            android:layout_alignBottom="@+id/button"
+            android:layout_alignBaseline="@+id/tv_captioning_judge"
+            android:layout_alignBottom="@+id/tv_captioning_judge"
             android:layout_centerInParent="true"
             android:text="Round"
             android:textSize="24sp" />
 
     </RelativeLayout>
-    
-    
-    <ScrollView
-        android:layout_width=""
-        android:layout_height=""></ScrollView>
+
 
     <ImageView
         android:layout_width="wrap_content"

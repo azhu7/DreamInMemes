@@ -32,11 +32,11 @@
         android:layout_weight=".1" >
 
         <TextView
+            android:id="@+id/tv_captioning_others"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textSize="25dp"
-            android:text="Username (Judge)"/>
+            android:textSize="25dp" />
 
     </RelativeLayout>
 
@@ -104,9 +104,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Submit Meme!"
             android:background="@color/MainTheme"
-            />
+            android:onClick="submitMeme"
+            android:text="Submit Meme!" />
 
 
     </RelativeLayout>

@@ -9,7 +9,7 @@
         android:layout_height="73dp">
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/tv_captioning_judge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -23,21 +23,22 @@
             android:id="@+id/tv_roundNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/button"
-            android:layout_alignBottom="@+id/button"
+            android:layout_alignBaseline="@+id/tv_captioning_judge"
+            android:layout_alignBottom="@+id/tv_captioning_judge"
             android:layout_centerHorizontal="true"
             android:text=""
             android:textSize="24sp" />
-        
+
         <Button
             android:id="@+id/button_proceed"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:text="submit"/>
+            android:onClick="startCaptioning"
+            android:text="submit" />
 
     </RelativeLayout>
 

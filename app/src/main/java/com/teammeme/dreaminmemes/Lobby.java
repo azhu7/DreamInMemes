@@ -31,7 +31,7 @@ import java.util.List;
 public class Lobby extends AppCompatActivity {
     String lobbyId;  // this objectId
     String name;
-    ArrayList<ParseObject> players;  // Player IDs
+    ArrayList<ParseObject> players;  // Player Infos
     LinkedList<String> judgeQueue;  // Maintains order of judges
     //TODO: ArrayList<String> invited;  // Invited players -- For restoring state of pending games
     int roundNum;
@@ -57,12 +57,11 @@ public class Lobby extends AppCompatActivity {
         if (isJudge) {
             switch (state) {
                 case GameInit:
-                    setContentView(R.layout.game_init_judge);  // Temporary
+                    setContentView(R.layout.game_init_judge);
                     if (state == State.GameInit) {
                         EditText et_title = (EditText)findViewById(R.id.et_title);
                         et_title.setText(name);
                     }
-                    //setContentView(R.layout.game_init_judge);
                     break;
                 case ChoosePicture:
                     setContentView(R.layout.choose_picture_judge);
@@ -71,6 +70,8 @@ public class Lobby extends AppCompatActivity {
                     break;
                 case Captioning:
                     setContentView(R.layout.captioning_judge);
+                    TextView tv_captioning_judge = (TextView)findViewById(R.id.tv_captioning_judge);
+                    tv_captioning_judge.setText("Round " + roundNum + "/" + players.size());
                     break;
                 case ChooseWinner:
                     //setContentView(R.layout.choose_winner_judge);
@@ -82,14 +83,28 @@ public class Lobby extends AppCompatActivity {
         } else {
             switch (state) {
                 case GameInit:
-                    setContentView(R.layout.game_init_others);  // Temporary
-                    //setContentView(R.layout.game_init_others);
+                    setContentView(R.layout.game_init_others);
+                    TextView txtGameName = (TextView)findViewById(R.id.txtGameName);
+                    txtGameName.setText(name);
                     break;
                 case ChoosePicture:
                     //setContentView(R.layout.choose_picture_others);
                     break;
                 case Captioning:
-                    //setContentView(R.layout.captioning_others);
+                    setContentView(R.layout.captioning_others);
+                    final TextView tv_captioning_others = (TextView)findViewById(R.id.tv_captioning_others);
+                    String currentJudgeId = judgeQueue.getFirst();
+                    ParseQuery<ParseUser> query = ParseUser.getQuery();
+                    query.whereEqualTo("userId", currentJudgeId);
+                    query.findInBackground(new FindCallback<ParseUser>() {
+                        public void done(List<ParseUser> objects, ParseException e) {
+                            if (e == null) {
+                                tv_captioning_others.setText(objects.get(0).getString("username"));
+                            } else {
+                                Log.d("*****CaptioningOthers", "Error: " + e.getMessage());
+                            }
+                        }
+                    });
                     break;
                 case ChooseWinner:
                     //setContentView(R.layout.choose_winner_others);
@@ -134,6 +149,7 @@ public class Lobby extends AppCompatActivity {
 
     // Instantiate game in Lobby, incorporating information from Create game page.
     public void startGame(View v) {
+        // Delete any lingering lobby requests
         ParseQuery<ParseObject> query = ParseQuery.getQuery("userRequest");
         query.whereEqualTo("lobbyId", lobbyId);
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -152,6 +168,13 @@ public class Lobby extends AppCompatActivity {
         state = State.ChoosePicture;
         loadLayout();
     }
+
+    // Judge submits picture and players begin to caption.
+    public void startCaptioning(View v) {
+        state = State.Captioning;
+        loadLayout();
+    }
+
 
     // Store lobby to DB. Requires that specified lobby exists in DB already.
     private void saveLobby() {
@@ -331,6 +354,23 @@ public class Lobby extends AppCompatActivity {
         alert.show();
     }
 
+    // Non-judge player submits captioned meme. Note: each player may only submit one meme.
+    public void submitMeme(View v) {
+        for (int i = 0; i < players.size(); ++i) {
+            String currentUserId = ParseUser.getCurrentUser().getObjectId();
+            // Find current player
+            if (players.get(i).getString("userId").equals(currentUserId)) {
+                if (!players.get(i).getBoolean("submitted")) {
+                    //TODO: submit File to Parse
+                    players.get(i).put("submitted", true);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Can only submit one meme per round!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+        throw new RuntimeException("User not part of this Lobby.");
+    }
+
     private void createFriendInviteListItem(LinearLayout LL, String username) {
 
         float scale = getResources().getDisplayMetrics().density;
@@ -363,17 +403,12 @@ public class Lobby extends AppCompatActivity {
         Intent i = new Intent(getApplicationContext(), MemeCollection.class);
         int requestCode = 42;
         startActivityForResult(i, requestCode);
-
-        String path = i.getStringExtra("path");
-
-        Toast.makeText(getApplicationContext(), path, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 42 && resultCode == RESULT_OK && data != null) {
             String memePath = data.getStringExtra("path");
-            Toast.makeText(getApplicationContext(), memePath, Toast.LENGTH_SHORT).show();
             ImageView iv_selected = (ImageView)findViewById(R.id.iv_selected);
             if (memePath.equals("badluckbrian.png"))
                 iv_selected.setImageResource(R.drawable.badluckbrian);
