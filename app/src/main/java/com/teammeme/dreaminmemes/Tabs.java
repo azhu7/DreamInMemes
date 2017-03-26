@@ -147,7 +147,7 @@ public class Tabs extends AppCompatActivity {
                                 Intent i = new Intent(getApplicationContext(), Lobby.class);
                                 i.putExtra("lobbyId", dataObject.getObjectId());
                                 startActivity(i);
-                                Log.d("*****Tabs", "Starting openNewLobby");
+                                Log.d("*****Tabs", "Starting a new lobby from Tabs.openNewLobby");
                             }
                         });
                     } else {

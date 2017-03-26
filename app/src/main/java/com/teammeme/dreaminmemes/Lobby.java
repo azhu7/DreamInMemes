@@ -25,8 +25,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-// TODO: Game
-
 // Lobby facilitates game initialization (inviting players) and the actual game play.
 public class Lobby extends AppCompatActivity {
     String lobbyId;  // this objectId
@@ -52,34 +50,46 @@ public class Lobby extends AppCompatActivity {
 
     // Load layout based on current state
     private void loadLayout() {
-        setContentView(R.layout.game_init);  // Temporary
-        /*if (isJudge) {
+        //setContentView(R.layout.game_init);  // Temporary
+        if (isJudge) {
             switch (state) {
                 case GameInit:
-                    setContentView(R.layout.game_init_judge);
+                    setContentView(R.layout.game_init);  // Temporary
+                    //setContentView(R.layout.game_init_judge);
+                    break;
                 case ChoosePicture:
                     setContentView(R.layout.choose_picture_judge);
+                    break;
                 case Captioning:
                     setContentView(R.layout.captioning_judge);
+                    break;
                 case ChooseWinner:
-                    setContentView(R.layout.choose_winner_judge);
+                    //setContentView(R.layout.choose_winner_judge);
+                    break;
                 case ShowScores:
-                    setContentView(R.layout.show_scores);
+                    //setContentView(R.layout.show_scores);
+                    break;
             }
         } else {
             switch (state) {
                 case GameInit:
-                    setContentView(R.layout.game_init_others);
+                    setContentView(R.layout.game_init);  // Temporary
+                    //setContentView(R.layout.game_init_others);
+                    break;
                 case ChoosePicture:
-                    setContentView(R.layout.choose_picture_others);
+                    //setContentView(R.layout.choose_picture_others);
+                    break;
                 case Captioning:
-                    setContentView(R.layout.captioning_others);
+                    //setContentView(R.layout.captioning_others);
+                    break;
                 case ChooseWinner:
-                    setContentView(R.layout.choose_winner_others);
+                    //setContentView(R.layout.choose_winner_others);
+                    break;
                 case ShowScores:
-                    setContentView(R.layout.show_scores);
+                    //setContentView(R.layout.show_scores);
+                    break;
             }
-        }*/
+        }
     }
 
     // Perform different actions based on current state
@@ -118,7 +128,7 @@ public class Lobby extends AppCompatActivity {
         EditText et_title = (EditText) findViewById(R.id.et_title);
         name = et_title.getText().toString();
         state = State.ChoosePicture;
-        run();
+        loadLayout();
     }
 
     // Store lobby to DB. Requires that specified lobby exists in DB already.
