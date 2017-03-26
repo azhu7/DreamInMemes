@@ -56,7 +56,7 @@ public class Lobby extends AppCompatActivity {
         if (isJudge) {
             switch (state) {
                 case GameInit:
-                    setContentView(R.layout.game_init);  // Temporary
+                    setContentView(R.layout.game_init_judge);  // Temporary
                     //setContentView(R.layout.game_init_judge);
                     break;
                 case ChoosePicture:
@@ -77,7 +77,7 @@ public class Lobby extends AppCompatActivity {
         } else {
             switch (state) {
                 case GameInit:
-                    setContentView(R.layout.game_init);  // Temporary
+                    setContentView(R.layout.game_init_others);  // Temporary
                     //setContentView(R.layout.game_init_others);
                     break;
                 case ChoosePicture:
