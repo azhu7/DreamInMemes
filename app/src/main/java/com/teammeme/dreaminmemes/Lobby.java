@@ -33,6 +33,7 @@ public class Lobby extends AppCompatActivity {
     String name;
     ArrayList<ParseObject> players;  // Player IDs
     LinkedList<String> judgeQueue;  // Maintains order of judges
+    //TODO: ArrayList<String> invited;  // Invited players -- For restoring state of pending games
     int roundNum;
     boolean isJudge;
     State state;
@@ -57,6 +58,10 @@ public class Lobby extends AppCompatActivity {
             switch (state) {
                 case GameInit:
                     setContentView(R.layout.game_init_judge);  // Temporary
+                    if (state == State.GameInit) {
+                        EditText et_title = (EditText)findViewById(R.id.et_title);
+                        et_title.setText(name);
+                    }
                     //setContentView(R.layout.game_init_judge);
                     break;
                 case ChoosePicture:
@@ -151,6 +156,11 @@ public class Lobby extends AppCompatActivity {
     // Store lobby to DB. Requires that specified lobby exists in DB already.
     private void saveLobby() {
         // Write to DB: query object by objectId and alter contents
+        if (state == State.GameInit) {
+            EditText et = (EditText)findViewById(R.id.et_title);
+            name = et.getText().toString();
+        }
+
         ParseQuery<ParseObject> dataObject = ParseQuery.getQuery("Lobby");
         dataObject.getInBackground(lobbyId, new GetCallback<ParseObject>() {
             @Override

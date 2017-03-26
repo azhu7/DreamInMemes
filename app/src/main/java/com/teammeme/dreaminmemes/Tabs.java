@@ -87,18 +87,14 @@ public class Tabs extends AppCompatActivity {
                     public void done(ParseObject object, ParseException e) {
                         if (e == null) {
                             // PENDING
-
                             if (object.getInt("state") == Lobby.State.GameInit.ordinal()) {
-                                createPendingRelativeLayout(pendingLL, "Game Name", 3, 24);
-
-
+                                createPendingRelativeLayout(pendingLL, object.getString("name"), object.getObjectId(), 3, 24);
                                 Log.d("*****populateGames", "User is in pending lobby: " + object.getObjectId());
                             }
                             // ACTIVE
                             else {
                                 // GENERATE ACTIVE BOX
-                                createActiveRelativeLayout(activeLL, "Game Name", "Directions", 24);
-
+                                createActiveRelativeLayout(activeLL, object.getString("name"), object.getObjectId(), "Directions", 24);
                                 List<String> temp = object.getList("judgeQueue");
                                 LinkedList<String> judgeQueue = new LinkedList<String>(temp);
                                 if (judgeQueue.peekFirst().equals(user.getObjectId())) {
@@ -124,7 +120,7 @@ public class Tabs extends AppCompatActivity {
         void openNewLobby(String lobbyId) {
             ArrayList<ParseObject> players = new ArrayList<>();
             LinkedList<String> judgeQueue = new LinkedList<>();
-            ParseObject ownerInfo = ParseObject.create("LobbyUserInfo");
+            ParseObject ownerInfo = ParseObject.create("lobbyUserInfo");
             ownerInfo.put("userId", ParseUser.getCurrentUser().getObjectId());
             ownerInfo.put("score", 0);
             players.add(ownerInfo);
@@ -132,7 +128,7 @@ public class Tabs extends AppCompatActivity {
 
             // Write to DB
             final ParseObject dataObject = ParseObject.create("Lobby");
-            dataObject.put("name", "blank");
+            dataObject.put("name", "");
             dataObject.put("players", players);
             dataObject.put("judgeQueue", judgeQueue);
             dataObject.put("roundNum", 1);
@@ -207,8 +203,8 @@ public class Tabs extends AppCompatActivity {
                             r.setId(View.generateViewId());
                             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                                     dpAsPixels70);
-
-                            createNestedLinearLayoutWithTextViews(r, "Game " + i, "Username Invited You");
+                            // TODO: INJECT MORE
+                            createNestedLinearLayoutWithTextViews(r, "Game " + i, "lobbyId", "Username Invited You");
 
                             // Pass in userId and lobbyId
                             createAcceptDeclineButtons(r, objects.get(i).getString("userId"),
@@ -245,8 +241,7 @@ public class Tabs extends AppCompatActivity {
         tabGlobal.openNewLobby(user.getObjectId());
     }
 
-    private void createNestedLinearLayoutWithTextViews(RelativeLayout r, String gameName, String belowMessage) {
-
+    private void createNestedLinearLayoutWithTextViews(RelativeLayout r, String lobbyName, String lobbyId, String belowMessage) {
         float scale = getResources().getDisplayMetrics().density;
         int dpAsPixels20 = (int) (20*scale + 0.5f);
 
@@ -261,10 +256,11 @@ public class Tabs extends AppCompatActivity {
         TextView tv1 = new TextView(getApplicationContext());
         LinearLayout.LayoutParams gameNameParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT);
-        tv1.setText(gameName);
+        tv1.setText(lobbyName);
         tv1.setPadding(dpAsPixels20, 0, 0, 0);
         tv1.setTextSize(20);
         tv1.setId(View.generateViewId());
+        tv1.setTag(lobbyId);
 
         // create the Directions text view
         TextView tv2 = new TextView(getApplicationContext());
@@ -400,7 +396,7 @@ public class Tabs extends AppCompatActivity {
         r.addView(LL, rParams);
     }
 
-    private void createActiveRelativeLayout(LinearLayout l, String gameName, String directions, int timeLeft) {
+    private void createActiveRelativeLayout(LinearLayout LL, String lobbyName, final String lobbyId, String directions, int timeLeft) {
         float scale = getResources().getDisplayMetrics().density;
         int dpAsPixels20 = (int) (20*scale + 0.5f);
         int dpAsPixels15 = (int) (15*scale + 0.5f);
@@ -413,9 +409,9 @@ public class Tabs extends AppCompatActivity {
         r.setId(View.generateViewId());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpAsPixels70);
 
-        createNestedLinearLayoutWithTextViews(r, gameName, directions);
-
         // create the Directions text view
+        createNestedLinearLayoutWithTextViews(r, lobbyName, lobbyId, directions);
+
         TextView tv3 = new TextView(getApplicationContext());
         RelativeLayout.LayoutParams timeParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT);
@@ -436,14 +432,16 @@ public class Tabs extends AppCompatActivity {
 
             @Override
             public void onClick(View v){
-                Toast.makeText(getApplicationContext(), "Hello from " + v.getId(), Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getApplicationContext(), Lobby.class);
+                i.putExtra("lobbyId", lobbyId);
+                startActivity(i);
             }
         });
 
-        l.addView(r, params);
+        LL.addView(r, params);
     }
 
-    private void createPendingRelativeLayout(LinearLayout LL, String gameName, int playersPending, int timeLeft) {
+    private void createPendingRelativeLayout(LinearLayout LL, String lobbyName, final String lobbyId, int playersPending, int timeLeft) {
 
         float scale = getResources().getDisplayMetrics().density;
         int dpAsPixels20 = (int) (20*scale + 0.5f);
@@ -462,10 +460,11 @@ public class Tabs extends AppCompatActivity {
         RelativeLayout.LayoutParams gameNameParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT);
         gameNameParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-        gameNameText.setText(gameName);
+        gameNameText.setText(lobbyName);
         gameNameText.setTextSize(20);
         gameNameText.setId(View.generateViewId());
         gameNameText.setPadding(dpAsPixels20, 0, 0, 0);
+        gameNameText.setTag(lobbyId);
 
         // Text view with players pending
         TextView pendingPlayers = new TextView(getApplicationContext());
@@ -483,12 +482,12 @@ public class Tabs extends AppCompatActivity {
 
         r.setClickable(true);
         r.setOnClickListener(new View.OnClickListener(){
-
             @Override
-            public void onClick(View v){
-                Toast.makeText(getApplicationContext(), "Hello from " + v.getId(), Toast.LENGTH_SHORT).show();
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), Lobby.class);
+                i.putExtra("lobbyId", lobbyId);
+                startActivity(i);
             }
-
         });
 
         LL.addView(r, rParams);
