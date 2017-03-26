@@ -351,17 +351,27 @@ public class Tabs extends AppCompatActivity {
                     @Override
                     public void done(ParseObject object, ParseException e) {
                         if (e == null) {
+                            // Update Lobby
                             List<ParseObject> tempPlayers = object.getList("players");
                             ParseObject lobbyUserInfo = ParseObject.create("lobbyUserInfo");
+                            // Create new user info
                             lobbyUserInfo.put("userId", ParseUser.getCurrentUser().getObjectId());
                             lobbyUserInfo.put("score", 0);
                             lobbyUserInfo.put("submitted", false);
                             tempPlayers.add(lobbyUserInfo);
                             List<String> tempJudgeQueue = object.getList("judgeQueue");
-                            tempJudgeQueue.add(lobbyId);
+                            tempJudgeQueue.add(ParseUser.getCurrentUser().getObjectId());
                             object.put("players", tempPlayers);
                             object.put("judgeQueue", tempJudgeQueue);
                             object.saveInBackground();
+
+                            // Update user
+                            ParseUser user = ParseUser.getCurrentUser();
+                            List<String> lobbies = user.getList("lobbies");
+                            lobbies.add(lobbyId);
+                            user.put("lobbies", lobbies);
+                            user.saveInBackground();
+
                             tabNotifications.open();  // Refresh!
                         }
                     }

@@ -476,7 +476,7 @@ public class Lobby extends AppCompatActivity {
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
-                
+
             }
         });
     }
