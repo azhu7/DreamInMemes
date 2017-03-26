@@ -136,7 +136,7 @@ public class Lobby extends AppCompatActivity {
     }
 
     // Store lobby to DB. Requires that specified lobby exists in DB already.
-    private void saveLobby(final String lobbyId) {
+    private void saveLobby() {
         // Write to DB: query object by objectId and alter contents
         ParseQuery<ParseObject> dataObject = ParseQuery.getQuery("Lobby");
         dataObject.getInBackground(lobbyId, new GetCallback<ParseObject>() {
@@ -201,8 +201,9 @@ public class Lobby extends AppCompatActivity {
                     query1.whereEqualTo("lobbyId", lobbyId);
                     query1.findInBackground(new FindCallback<ParseObject>() {
                         public void done(List<ParseObject> userRequests, ParseException e) {
-                            if (e == null && userRequests.size() == 1) {
-                                userRequests.get(0).deleteInBackground();
+                            if (e == null) {
+                                for (int i = 0; i < userRequests.size(); ++i)
+                                    userRequests.get(i).deleteInBackground();
                             } else {
                                 Log.d("*****deleteLobby", "Error: " + e.getMessage());
                             }
@@ -244,6 +245,22 @@ public class Lobby extends AppCompatActivity {
     }
 
     public void leaveLobby(View v) {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    saveLobby();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.run();
+        try {
+            t.join();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         finish();
     }
 
