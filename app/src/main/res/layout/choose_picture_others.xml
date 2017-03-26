@@ -14,7 +14,7 @@
         android:layout_weight="0.10">
 
         <Button
-            android:id="@+id/back_to_home_button"
+            android:id="@+id/back_to_home_b"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -32,7 +32,7 @@
         android:layout_weight=".1" >
 
         <TextView
-            android:id="@+id/tv_captioning_others"
+            android:id="@+id/tv_picture_others"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -73,7 +73,10 @@
             android:id="@+id/tv_choose_pic_others"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:textAlignment="center"
+            android:textSize="24sp" />
 
     </RelativeLayout>
 
@@ -109,8 +112,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@color/MainTheme"
-            android:onClick="submitMeme" />
+            android:background="@color/MainTheme" />
 
 
     </RelativeLayout>

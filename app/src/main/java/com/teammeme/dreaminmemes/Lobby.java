@@ -111,6 +111,23 @@ public class Lobby extends AppCompatActivity {
                             }
                         }
                     });
+                    ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Lobby");
+                    query1.getInBackground(lobbyId, new GetCallback<ParseObject>() {
+                        @Override
+                        public void done(ParseObject object, ParseException e) {
+                            String memePath = object.getString("memeFilename");
+                            ImageView iv_meme_caption = (ImageView)findViewById(R.id.iv_meme_caption);
+                            if (memePath.equals("badluckbrian.png"))
+                                iv_meme_caption.setImageResource(R.drawable.badluckbrian);
+                            else if (memePath.equals("oldharold.png"))
+                                iv_meme_caption.setImageResource(R.drawable.oldharold);
+                            else if (memePath.equals("thinkaboutit.png"))
+                                iv_meme_caption.setImageResource(R.drawable.thinkaboutit);
+                            else if (memePath.equals("willywonka.png"))
+                                iv_meme_caption.setImageResource(R.drawable.willywonka);
+                        }
+                    });
+
                     break;
                 case ChooseWinner:
                     //setContentView(R.layout.choose_winner_others);
