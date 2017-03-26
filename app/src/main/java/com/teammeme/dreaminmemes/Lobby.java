@@ -129,6 +129,19 @@ public class Lobby extends AppCompatActivity {
 
     // Instantiate game in Lobby, incorporating information from Create game page.
     public void startGame(View v) {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("userRequest");
+        query.whereEqualTo("lobbyId", lobbyId);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null) {
+                    for (int i = 0; i < objects.size(); ++i)
+                        objects.get(i).deleteInBackground();
+                } else {
+                    Log.d("*****startGame", "Error: " + e.getMessage());
+                }
+            }
+        });
         EditText et_title = (EditText) findViewById(R.id.et_title);
         name = et_title.getText().toString();
         state = State.ChoosePicture;
@@ -173,10 +186,6 @@ public class Lobby extends AppCompatActivity {
                     isJudge = judgeQueue.peekFirst().equals(ParseUser.getCurrentUser().getObjectId());
                     state = State.values()[object.getInt("state")];
                     loadLayout();
-                    //TODO: for saveLobby debug
-                    //name = "Changed!";
-                    //judgeQueue.add("Another user!");
-                    //saveLobby(lobbyId);
                 } else {
                     Log.d("*****Lobby", "Error loading lobby: " + e.getMessage());
                 }
@@ -186,8 +195,8 @@ public class Lobby extends AppCompatActivity {
 
     // Delete specified lobby from Parse Cloud. Also delete any mentions of the lobby's objectId.
     public void deleteLobby(View v) {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Lobby");
-        query.getInBackground(lobbyId, new GetCallback<ParseObject>() {
+        ParseQuery<ParseObject> dataObject = ParseQuery.getQuery("Lobby");
+        dataObject.getInBackground(lobbyId, new GetCallback<ParseObject>() {
             @Override
             public void done(final ParseObject object, ParseException e) {
                 if (e == null) {

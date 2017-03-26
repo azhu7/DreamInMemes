@@ -7,15 +7,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewParent;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
 import com.parse.GetCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -183,31 +187,42 @@ public class Tabs extends AppCompatActivity {
             setContentView(R.layout.tab_notifications);
 
             float scale = getResources().getDisplayMetrics().density;
-            int dpAsPixels20 = (int) (20*scale + 0.5f);
-            int dpAsPixels15 = (int) (15*scale + 0.5f);
-            int dpAsPixels70 = (int) (70*scale + 0.5f);
-            int dpAsPixels50 = (int) (50*scale + 0.5f);
-            int dpAsPixels1 = (int) (1*scale + 0.5f);
+            final int dpAsPixels20 = (int) (20*scale + 0.5f);
+            final int dpAsPixels15 = (int) (15*scale + 0.5f);
+            final int dpAsPixels70 = (int) (70*scale + 0.5f);
+            final int dpAsPixels50 = (int) (50*scale + 0.5f);
+            final int dpAsPixels1 = (int) (1*scale + 0.5f);
 
-            int numGameRequests = 5;
+            final LinearLayout gameRequestsLayout = (LinearLayout)findViewById(R.id.LinLayoutGameRequests);
 
-            LinearLayout gameRequestsLayout = (LinearLayout)findViewById(R.id.LinLayoutGameRequests);
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("userRequest");
+            query.whereEqualTo("userId", ParseUser.getCurrentUser().getObjectId());
+            query.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List<ParseObject> objects, ParseException e) {
+                    if (e == null) {
+                        for (int i = 0; i < objects.size(); ++i) {
+                            // create the relative layout
+                            RelativeLayout r = new RelativeLayout(getApplicationContext());
+                            r.setId(View.generateViewId());
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                    dpAsPixels70);
 
-            for (int i = 0; i < numGameRequests; i++) {
-                // create the relative layout
-                RelativeLayout r = new RelativeLayout(getApplicationContext());
-                r.setId(View.generateViewId());
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                        dpAsPixels70);
+                            createNestedLinearLayoutWithTextViews(r, "Game " + i, "Username Invited You");
 
-                createNestedLinearLayoutWithTextViews(r, "Game Name", "Username Invited You");
+                            // Pass in userId and lobbyId
+                            createAcceptDeclineButtons(r, objects.get(i).getString("userId"),
+                                    objects.get(i).getString("lobbyId"));
 
-                createAcceptDeclineButtons(r);
+                            createDivider(r);
 
-                createDivider(r);
-
-                gameRequestsLayout.addView(r, params);
-            }
+                            gameRequestsLayout.addView(r, params);
+                        }
+                    } else {
+                        Log.d("*****TabNotific.open", "Error: " + e.getMessage());
+                    }
+                }
+            });
         }
     }
 
@@ -280,13 +295,13 @@ public class Tabs extends AppCompatActivity {
         r.addView(divider, dividerParams);
     }
 
-    private void createAcceptDeclineButtons(RelativeLayout r) {
+    private void createAcceptDeclineButtons(final RelativeLayout r, String userId, String lobbyId) {
         float scale = getResources().getDisplayMetrics().density;
         int dpAsPixels20 = (int) (20*scale + 0.5f);
         int dpAsPixels70 = (int) (70*scale + 0.5f);
         int dpAsPixels50 = (int) (50*scale + 0.5f);
 
-        LinearLayout LL = new LinearLayout(getApplicationContext());
+        final LinearLayout LL = new LinearLayout(getApplicationContext());
         RelativeLayout.LayoutParams rParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT);
         rParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
@@ -298,24 +313,84 @@ public class Tabs extends AppCompatActivity {
         LinearLayout.LayoutParams acceptParams = new LinearLayout.LayoutParams(dpAsPixels50,
                 dpAsPixels50);
         acceptButton.setBackgroundColor(Color.parseColor("#00FF00"));
+        acceptButton.setTag(userId);
+        r.setTag(lobbyId);
 
         ImageButton rejectButton = new ImageButton(getApplicationContext());
         LinearLayout.LayoutParams rejectParams = new LinearLayout.LayoutParams(dpAsPixels50,
                 dpAsPixels50);
         rejectButton.setBackgroundColor(Color.parseColor("#FF0000"));
+        rejectButton.setTag(userId);
 
         // set onClick listeners for buttons
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Remove
+                ImageButton ib = (ImageButton)v;
+                final String userId = ib.getTag().toString();
+                final String lobbyId = r.getTag().toString();
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("userRequest");
+                query.whereEqualTo("userId", userId);
+                query.whereEqualTo("lobbyId", lobbyId);
+                query.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> objects, ParseException e) {
+                        if (e == null) {
+                            for (int i = 0; i < objects.size(); ++i)
+                                objects.get(i).deleteInBackground();
+                        } else {
+                            Log.d("*****acceptButton", "Error: " + e.getMessage());
+                        }
+                    }
+                });
+                // Remove physical box
+                r.removeAllViews();
                 // Add to lobby
+                ParseQuery<ParseObject> dataObject = ParseQuery.getQuery("Lobby");
+                dataObject.getInBackground(lobbyId, new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        if (e == null) {
+                            List<ParseObject> tempPlayers = object.getList("players");
+                            ParseObject lobbyUserInfo = ParseObject.create("lobbyUserInfo");
+                            lobbyUserInfo.put("userId", ParseUser.getCurrentUser().getObjectId());
+                            lobbyUserInfo.put("score", 0);
+                            tempPlayers.add(lobbyUserInfo);
+                            List<String> tempJudgeQueue = object.getList("judgeQueue");
+                            tempJudgeQueue.add(lobbyId);
+                            object.put("players", tempPlayers);
+                            object.put("judgeQueue", tempJudgeQueue);
+                            object.saveInBackground();
+                            tabNotifications.open();  // Refresh!
+                        }
+                    }
+                });
             }
         });
         rejectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Remove
+                ImageButton ib = (ImageButton)v;
+                final String userId = ib.getTag().toString();
+                final String lobbyId = r.getTag().toString();
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("userRequest");
+                query.whereEqualTo("userId", userId);
+                query.whereEqualTo("lobbyId", lobbyId);
+                query.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> objects, ParseException e) {
+                        if (e == null) {
+                            for (int i = 0; i < objects.size(); ++i)
+                                objects.get(i).deleteInBackground();
+                            r.removeAllViews();
+                            tabNotifications.open();  // Refresh!
+                        } else {
+                            Log.d("*****rejectButton", "Error: " + e.getMessage());
+                        }
+                    }
+                });
             }
         });
 
