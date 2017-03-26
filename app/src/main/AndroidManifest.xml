@@ -25,6 +25,10 @@
         <activity android:name=".Lobby" >
 
         </activity>
+
+        <activity android:name=".MemeCollection">
+
+        </activity>
     </application>
 
 </manifest>

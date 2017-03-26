@@ -1,6 +1,7 @@
 package com.teammeme.dreaminmemes;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -298,6 +299,27 @@ public class Lobby extends AppCompatActivity {
         l.addView(tv, tvParams);
         LL.addView(l, layoutParams);
     }
+
+
+
+    public void goToMemeCollection(View v) {
+        Intent i = new Intent(getApplicationContext(), MemeCollection.class);
+        int requestCode = 42;
+        startActivityForResult(i, requestCode);
+
+        String path = i.getStringExtra("path");
+
+        Toast.makeText(getApplicationContext(), path, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 42 && resultCode == RESULT_OK && data != null) {
+            String memePath = data.getStringExtra("path");
+            Toast.makeText(getApplicationContext(), memePath, Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
 
 }
