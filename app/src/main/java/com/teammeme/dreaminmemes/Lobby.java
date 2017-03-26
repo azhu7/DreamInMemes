@@ -149,6 +149,11 @@ public class Lobby extends AppCompatActivity {
 
     // Instantiate game in Lobby, incorporating information from Create game page.
     public void startGame(View v) {
+        EditText et_title = (EditText) findViewById(R.id.et_title);
+        name = et_title.getText().toString();
+        if (name == null)
+            return;  // TODO ERROR
+
         // Delete any lingering lobby requests
         ParseQuery<ParseObject> query = ParseQuery.getQuery("userRequest");
         query.whereEqualTo("lobbyId", lobbyId);
@@ -163,15 +168,20 @@ public class Lobby extends AppCompatActivity {
                 }
             }
         });
-        EditText et_title = (EditText) findViewById(R.id.et_title);
-        name = et_title.getText().toString();
         state = State.ChoosePicture;
+        saveLobby();
         loadLayout();
     }
 
     // Judge submits picture and players begin to caption.
     public void startCaptioning(View v) {
+        ImageView iv_selected = (ImageView)findViewById(R.id.iv_selected);
+        if (iv_selected.getDrawable() == null) {
+            Toast.makeText(getApplicationContext(), "Must select a picture for captioning!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         state = State.Captioning;
+        saveLobby();
         loadLayout();
     }
 
@@ -184,22 +194,37 @@ public class Lobby extends AppCompatActivity {
             name = et.getText().toString();
         }
 
-        ParseQuery<ParseObject> dataObject = ParseQuery.getQuery("Lobby");
-        dataObject.getInBackground(lobbyId, new GetCallback<ParseObject>() {
+        Thread t = new Thread(new Runnable() {
             @Override
-            public void done(ParseObject object, ParseException e) {
-                if (e == null) {
-                    object.put("name", name);
-                    object.put("players", players);
-                    object.put("judgeQueue", judgeQueue);
-                    object.put("roundNum", roundNum);
-                    object.put("state", state.ordinal());
-                    object.saveInBackground();
-                } else {
-                    Log.d("*****Lobby", "Error saving lobby: " + e.getMessage());
+            public void run() {
+                try {
+                    ParseQuery<ParseObject> dataObject = ParseQuery.getQuery("Lobby");
+                    dataObject.getInBackground(lobbyId, new GetCallback<ParseObject>() {
+                        @Override
+                        public void done(ParseObject object, ParseException e) {
+                        if (e == null) {
+                            object.put("name", name);
+                            object.put("players", players);
+                            object.put("judgeQueue", judgeQueue);
+                            object.put("roundNum", roundNum);
+                            object.put("state", state.ordinal());
+                            object.saveInBackground();
+                        } else {
+                            Log.d("*****Lobby", "Error saving lobby: " + e.getMessage());
+                        }
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
+        t.run();
+        try {
+            t.join();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // Load specified lobby from DB
@@ -286,23 +311,9 @@ public class Lobby extends AppCompatActivity {
         });
     }
 
+    // Leave lobby, but don't delete it.
     public void leaveLobby(View v) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    saveLobby();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        t.run();
-        try {
-            t.join();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        saveLobby();
         finish();
     }
 
