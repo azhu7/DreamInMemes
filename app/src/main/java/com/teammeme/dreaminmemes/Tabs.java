@@ -35,6 +35,30 @@ public class Tabs extends AppCompatActivity {
     private TabNotifications tabNotifications;
     private TabUser tabUser;
 
+    public void goToNotifications(View v){
+        tabNotifications.open();
+    }
+
+    public void goToGlobal(View v) {
+        tabGlobal.open();
+    }
+
+    public void goToUser(View v) {
+        tabUser.open();
+    }
+
+    public void logOut(View v){
+        ParseUser user = ParseUser.getCurrentUser();
+        user.logOut();
+        finish();
+    }
+
+    // Attached to new lobby button
+    public void createNewLobby(View view) {
+        ParseUser user = ParseUser.getCurrentUser();
+        tabGlobal.openNewLobby(user.getObjectId());
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,18 +193,6 @@ public class Tabs extends AppCompatActivity {
         }
     }
 
-    public void goToNotifications(View v){
-        tabNotifications.open();
-    }
-
-    public void goToGlobal(View v) {
-        tabGlobal.open();
-    }
-
-    public void goToUser(View v) {
-        tabUser.open();
-    }
-
     private class TabNotifications {
         void open() {
             setContentView(R.layout.tab_notifications);
@@ -229,19 +241,6 @@ public class Tabs extends AppCompatActivity {
         void open() {
             setContentView(R.layout.tab_user);
         }
-    }
-
-
-    public void logOut(View v){
-        ParseUser user = ParseUser.getCurrentUser();
-        user.logOut();
-        finish();
-    }
-
-    // Attached to new lobby button
-    public void createNewLobby(View view) {
-        ParseUser user = ParseUser.getCurrentUser();
-        tabGlobal.openNewLobby(user.getObjectId());
     }
 
     private void createNestedLinearLayoutWithTextViews(RelativeLayout r, String lobbyName, String lobbyId, String belowMessage) {
