@@ -117,7 +117,7 @@ public class Tabs extends AppCompatActivity {
         }
 
         // Store blank lobby (containing owner only) to DB and switch activity
-        void openNewLobby(String lobbyId) {
+        void openNewLobby(String ownerId) {
             ArrayList<ParseObject> players = new ArrayList<>();
             LinkedList<String> judgeQueue = new LinkedList<>();
             ParseObject ownerInfo = ParseObject.create("lobbyUserInfo");
@@ -125,7 +125,7 @@ public class Tabs extends AppCompatActivity {
             ownerInfo.put("score", 0);
             ownerInfo.put("submitted", false);
             players.add(ownerInfo);
-            judgeQueue.add(lobbyId);
+            judgeQueue.add(ownerId);
 
             // Write to DB
             final ParseObject dataObject = ParseObject.create("Lobby");
