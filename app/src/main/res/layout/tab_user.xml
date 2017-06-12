@@ -9,19 +9,97 @@
     tools:context="com.teammeme.dreaminmemes.Tabs">
 
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".10">
+
+
+        <TextView
+            android:id="@+id/txtUser"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:paddingTop="5dp"
+            android:text="User"
+            android:textAlignment="center"
+            android:textSize="35dp" />
+
+        <ImageButton
+            android:id="@+id/btnSettings"
+
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:onClick="settings"
+            app:srcCompat="@mipmap/ic_launcher" />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".85">
+        android:layout_weight=".375"
+        android:orientation="vertical">
 
+        <ImageView
+            android:id="@+id/imageView12"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            app:srcCompat="@mipmap/ic_launcher_round" />
 
+        <TextView
+            android:id="@+id/txtUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:text="User Name"
+            android:textAlignment="center"
+            android:textColor="@color/MainTheme"
+            android:textSize="30sp" />
 
-
-
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:text="See all your memes -->" />
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.375"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewStats"
+            android:layout_width="108dp"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingLeft="15dp"
+            android:text="Stats"
+            android:textColor="@color/MainTheme"
+            android:textSize="25sp" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.37">
+
+            <LinearLayout
+                android:id="@+id/LinLayoutStats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"

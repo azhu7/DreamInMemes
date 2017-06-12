@@ -54,10 +54,16 @@ public class Tabs extends AppCompatActivity {
     }
 
     // Attached to new lobby button
-    public void createNewLobby(View view) {
+    public void createNewLobby(View v) {
         ParseUser user = ParseUser.getCurrentUser();
         tabGlobal.openNewLobby(user.getObjectId());
     }
+
+    // Attached to settings button in User
+    public void settings(View v) {    }
+
+    // Attached to see all button in User
+    public void seeAllMemes(View v) {    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -240,6 +246,29 @@ public class Tabs extends AppCompatActivity {
     private class TabUser {
         void open() {
             setContentView(R.layout.tab_user);
+            // add scaling stuff
+            final LinearLayout statsLayout = (LinearLayout)findViewById(R.id.LinLayoutStats);
+
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
+            query.getInBackground(ParseUser.getCurrentUser().getObjectId(), new GetCallback<ParseObject>() {
+                @Override
+                public void done(ParseObject object, ParseException e) {
+                    if (e == null) {
+                        int totalPointsEver = object.getInt("totalPointsEver");
+                        int gamesPlayed = object.getInt("gamesPlayed");
+                        int gamesWon = object.getInt("gamesWon");
+                        System.out.println(totalPointsEver);
+                        System.out.println(gamesPlayed);
+                        System.out.println(gamesWon);
+                        // Note that getInt returns 0 if the grabbed value is null
+                        createStatRelativeLayout(statsLayout, "Games Played", gamesPlayed);
+                        createStatRelativeLayout(statsLayout, "Games Won", gamesWon);
+                        createStatRelativeLayout(statsLayout, "Total Points Earned", totalPointsEver);
+                    } else {
+                        Log.d("*****TabUser.open", "Error: " + e.getMessage());
+                    }
+                }
+            });
         }
     }
 
@@ -409,7 +438,8 @@ public class Tabs extends AppCompatActivity {
         r.addView(LL, rParams);
     }
 
-    private void createActiveRelativeLayout(LinearLayout LL, String lobbyName, final String lobbyId, String directions, int timeLeft) {
+    private void createActiveRelativeLayout(LinearLayout LL, String lobbyName,
+                                            final String lobbyId, String directions, int timeLeft) {
         float scale = getResources().getDisplayMetrics().density;
         int dpAsPixels20 = (int) (20*scale + 0.5f);
         int dpAsPixels15 = (int) (15*scale + 0.5f);
@@ -454,8 +484,8 @@ public class Tabs extends AppCompatActivity {
         LL.addView(r, params);
     }
 
-    private void createPendingRelativeLayout(LinearLayout LL, String lobbyName, final String lobbyId, int playersPending, int timeLeft) {
-
+    private void createPendingRelativeLayout(LinearLayout LL, String lobbyName,
+                                             final String lobbyId, int playersPending, int timeLeft) {
         float scale = getResources().getDisplayMetrics().density;
         int dpAsPixels20 = (int) (20*scale + 0.5f);
         int dpAsPixels15 = (int) (15*scale + 0.5f);
@@ -502,6 +532,37 @@ public class Tabs extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        LL.addView(r, rParams);
+    }
+
+    private void createStatRelativeLayout(LinearLayout LL, String type, int value) {
+        float scale = getResources().getDisplayMetrics().density;
+        int dpAsPixels20 = (int) (20*scale + 0.5f);
+        int dpAsPixels15 = (int) (15*scale + 0.5f);
+        int dpAsPixels70 = (int) (70*scale + 0.5f);
+        int dpAsPixels50 = (int) (50*scale + 0.5f);
+        int dpAsPixels1 = (int) (1*scale + 0.5f);
+
+        RelativeLayout r = new RelativeLayout(getApplicationContext());
+        r.setId(View.generateViewId());
+        LinearLayout.LayoutParams rParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+                dpAsPixels70);
+
+        // Text view with stat information
+        TextView stats = new TextView(getApplicationContext());
+        RelativeLayout.LayoutParams statsParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT);
+        statsParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        stats.setText(type + " " + value);
+        stats.setTextSize(20);
+        stats.setId(View.generateViewId());
+        stats.setPadding(dpAsPixels20, 0, 0, 0);
+        stats.setTag(type);
+
+        r.addView(stats, statsParams);
+
+        r.setClickable(false);
 
         LL.addView(r, rParams);
     }

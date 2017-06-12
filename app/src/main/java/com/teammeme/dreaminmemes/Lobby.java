@@ -555,6 +555,11 @@ public class Lobby extends AppCompatActivity {
         }
     }
 
+    public void endGame(View v) {
+        // once game is over, save stats as ints (game played counter, winner counter)
+        //   Update table User --> totalPointsEver, GamesPlayed, GamesWon
+    }
+
 
 
 }
