@@ -246,29 +246,48 @@ public class Tabs extends AppCompatActivity {
     private class TabUser {
         void open() {
             setContentView(R.layout.tab_user);
-            // add scaling stuff
+
             final LinearLayout statsLayout = (LinearLayout)findViewById(R.id.LinLayoutStats);
 
+            final ParseUser user = ParseUser.getCurrentUser();
+            if (user == null) {
+                Toast.makeText(getApplicationContext(), "TabUser null user pointer??", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            int gamesPlayed = user.getInt("gamesPlayed");
+            int gamesWon = user.getInt("gamesWon");
+            int totalPointsEver = user.getInt("totalPointsEver");
+
+            createStatRelativeLayout(statsLayout, "Games Played", gamesPlayed);
+            createStatRelativeLayout(statsLayout, "Games Won", gamesWon);
+            createStatRelativeLayout(statsLayout, "Total Points Earned", totalPointsEver);
+
+            Log.d("*****TabUser.open", "User games played: " + gamesPlayed);
+            Log.d("*****TabUser.open", "User games won: " + gamesWon);
+            Log.d("*****TabUser.open", "Total points: " + totalPointsEver);
+            /*
             ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
             query.getInBackground(ParseUser.getCurrentUser().getObjectId(), new GetCallback<ParseObject>() {
                 @Override
                 public void done(ParseObject object, ParseException e) {
                     if (e == null) {
-                        int totalPointsEver = object.getInt("totalPointsEver");
                         int gamesPlayed = object.getInt("gamesPlayed");
                         int gamesWon = object.getInt("gamesWon");
-                        System.out.println(totalPointsEver);
-                        System.out.println(gamesPlayed);
-                        System.out.println(gamesWon);
+                        int totalPointsEver = object.getInt("totalPointsEver");
                         // Note that getInt returns 0 if the grabbed value is null
                         createStatRelativeLayout(statsLayout, "Games Played", gamesPlayed);
                         createStatRelativeLayout(statsLayout, "Games Won", gamesWon);
                         createStatRelativeLayout(statsLayout, "Total Points Earned", totalPointsEver);
+
+                        Log.d("*****TabUser.open", "User games played: " + gamesPlayed);
+                        Log.d("*****TabUser.open", "User games won: " + gamesWon);
+                        Log.d("*****TabUser.open", "Total points: " + totalPointsEver);
                     } else {
                         Log.d("*****TabUser.open", "Error: " + e.getMessage());
                     }
                 }
             });
+            */
         }
     }
 
@@ -547,7 +566,7 @@ public class Tabs extends AppCompatActivity {
         RelativeLayout r = new RelativeLayout(getApplicationContext());
         r.setId(View.generateViewId());
         LinearLayout.LayoutParams rParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-                dpAsPixels70);
+                dpAsPixels50);
 
         // Text view with stat information
         TextView stats = new TextView(getApplicationContext());
@@ -558,7 +577,10 @@ public class Tabs extends AppCompatActivity {
         stats.setTextSize(20);
         stats.setId(View.generateViewId());
         stats.setPadding(dpAsPixels20, 0, 0, 0);
+        stats.setTextColor(Color.parseColor("#000000"));
         stats.setTag(type);
+
+        createDivider(r);
 
         r.addView(stats, statsParams);
 

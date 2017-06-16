@@ -41,7 +41,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".375"
+        android:layout_weight=".35"
         android:orientation="vertical">
 
         <ImageView
@@ -73,7 +73,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.375"
+        android:layout_weight="0.4"
         android:orientation="vertical">
 
         <TextView
@@ -85,6 +85,12 @@
             android:text="Stats"
             android:textColor="@color/MainTheme"
             android:textSize="25sp" />
+
+        <View
+            android:id="@+id/viewDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/MainTheme" />
 
         <ScrollView
             android:layout_width="match_parent"
